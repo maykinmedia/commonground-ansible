@@ -1,0 +1,25 @@
+---
+
+# Configure the environment for the app on the host machine
+
+- name: Create the application group '{{ django_app_docker_name_prefix }}'
+  ansible.builtin.group:
+    name: "{{ django_app_docker_name_prefix }}"
+
+- name: Create the application user
+  ansible.builtin.user:
+    name: "{{ django_app_docker_name_prefix }}"
+    state: present
+    group: "{{ django_app_docker_name_prefix }}"
+    comment: "{{ django_app_docker_name_prefix }} application user"
+    create_home: true
+  register: _django_app_docker_app_user
+
+- name: Template out the .env file
+  template:
+    src: "{{ django_app_docker_env_template|default('env.j2') }}"
+    dest: "{{ _django_app_docker_app_user.user.home }}/dotenv"
+    mode: 0400
+  register: _django_app_docker_env_file
+
+# TODO: django_app_nginx role which sets up the nginx user access to volumes?

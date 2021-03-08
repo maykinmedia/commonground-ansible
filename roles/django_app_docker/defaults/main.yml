@@ -11,6 +11,7 @@ django_app_docker_name_prefix: app
 
 # domain where the app is deployed. Used in the ALLOWED_HOSTS setting
 django_app_docker_domain: "app.example.com"
+django_app_docker_https: true
 
 django_app_docker_secret_key: override-me
 

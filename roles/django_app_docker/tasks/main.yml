@@ -1,2 +1,10 @@
 ---
-# tasks file for django_app_docker
+
+# Preparation for Docker environment
+- import_tasks: derive_facts.yml
+- import_tasks: setup_env.yml
+
+# Docker infra provisioning
+
+# Cleanup
+- import_tasks: unset_facts.yml
