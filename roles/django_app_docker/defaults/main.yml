@@ -1,2 +1,165 @@
 ---
-# defaults file for django_app_docker
+
+#######################################
+#                                     #
+# General namespacing/Django settings #
+#                                     #
+#######################################
+
+# prefix to use for container, network, volume... names
+django_app_docker_name_prefix: app
+
+# domain where the app is deployed. Used in the ALLOWED_HOSTS setting
+django_app_docker_domain: "app.example.com"
+
+django_app_docker_secret_key: override-me
+
+# list of allowed hosts
+django_app_docker_allowed_hosts:
+  - localhost
+  - '127.0.0.1'
+  - "{{ django_app_docker_domain }}"
+  - "www.{{ django_app_docker_domain }}"
+
+# Database connection parameters
+django_app_docker_db_engine: 'django.db.backends.postgresql'
+django_app_docker_db_host: /var/run/postgresql/  # use a proper TCP host or mount /var/run/postgresql for unix socket
+django_app_docker_db_port: 5432
+django_app_docker_db_name: django_app  # override this!
+django_app_docker_db_username: django_app  # override this!
+django_app_docker_db_password: django_app  # override this!
+
+# Any additional databases that need to be configured.
+# Format:
+#
+#   PREFIX:
+#     host: db1.example.com
+#     name: example
+#     username: extra-user
+#     password: sekret
+#
+#  This results in the envvars PREFIX_DB_HOST, PREFIX_DB_NAME...
+django_app_docker_extra_dbs: {}
+
+# Redis cache
+django_app_docker_cache_db: 0  # change this if you're using a shared redis instance
+django_app_docker_extra_caches: []
+
+# Error monitoring - Sentry integration. Disabled by default, set a value to opt-in.
+django_app_docker_sentry_dsn: null
+
+# Name of the python package containing the app, found in the `src/` directory
+# of the project.
+django_app_docker_package_name: "{{ django_app_docker_name_prefix }}"
+
+#######################################
+#                                     #
+# Container image definition          #
+#                                     #
+#######################################
+
+# Container image version to use
+django_app_docker_version: latest  # use a tag
+django_app_docker_sha256: null  # or use a sha256 hash
+
+# Container registry
+django_app_docker_image_registry: docker.io  # use Docker Hub by default
+# Image repository. Combined with `django_app_docker_image_registry` and
+# `django_app_docker_version` or `django_app_docker_sha256`, this leads to a fully
+# qualified image reference.
+django_app_docker_image_name: "maykinmedia/{{ django_app_docker_name_prefix}}"
+# `django_app_docker_image` is derived automatically from the above variables
+
+django_app_docker_image_always_pull: false
+
+#######################################
+#                                     #
+# Host system interface               #
+#                                     #
+#######################################
+
+# Number of desired running web backend containers. Note that all containers are
+# started and stopped together, there are no zero downtime deploys with this setup.
+django_app_docker_replicas: 1
+# Backend ports to expose to NGINX, starts at this value and ends at
+# `django_app_docker_port_start + django_app_docker_replicas - 1`.
+django_app_docker_port_start: 8000
+
+# Which volumes to create and where to mount them with which mode (rw, ro).
+# Typically created under /var/lib/docker/volumes, ensure you have sufficient disk
+# space.
+django_app_docker_volumes:
+  - name: "{{ django_app_docker_name_prefix }}-media"
+    mount: "/app/media"
+    mode: "rw"
+
+# Bind-mount the database socket directory
+django_app_docker_db_bind_mount: /var/run/postgresql/
+
+#######################################
+#                                     #
+# Celery integration                  #
+#                                     #
+#######################################
+
+# Global toggles - set to `true` to have other variables have effect
+django_app_docker_use_celery: false
+django_app_docker_use_celery_beat: false
+django_app_docker_use_flower: false
+
+# Which redis DB to use as broker/result backend
+django_app_docker_celery_db: 1  # uses the same redis instance as cache service
+django_app_docker_broker_url: "redis://{{ django_app_docker_name_prefix }}-redis:6379/{{ django_app_docker_celery_db }}"
+django_app_docker_result_backend: "{{ django_app_docker_broker_url }}"
+
+# container stop sends TERM for graceful termination, after this grace period, a KILL
+# is issued. You should set this per worker with the maximum duration of a task (should
+# be slightly higher than the task timeout)
+django_app_docker_celery_workers_default_grace_time: 30  # in seconds
+
+# Default amount of worker containers. Note that each container can spawn one or more
+# worker processes.
+django_app_docker_celery_workers_default_replicas: 2
+
+# Definition of worker queues. The default queue is named 'celery'
+django_app_docker_celery_workers:
+  - queue: celery
+    replicas: "{{ django_app_docker_celery_workers_default_replicas }}"
+    grace_time: "{{ django_app_docker_celery_workers_default_grace_time }}"
+
+# Flower: a celery monitoring tool. Use safe credentials and don't share them!
+django_app_docker_flower_user: flower  # change this
+django_app_docker_flower_password: flower  # change this
+django_app_docker_basic_auth: "{{ django_app_docker_flower_user }}:{{ django_app_docker_flower_password }}"  # TODO: can be removed?
+
+#######################################
+#                                     #
+# Outgoing e-mail configuration       #
+#                                     #
+#######################################
+
+# Main toggle, set to `true` to have other variables have any effect.
+django_app_docker_mail: false
+
+django_app_docker_mail_host: localhost  # point this to the mail container service / host
+django_app_docker_mail_port: '25'
+django_app_docker_mail_user: ''
+django_app_docker_mail_password: ''
+django_app_docker_mail_use_tls: 'no'
+django_app_docker_mail_default_from: "{{ django_app_docker_name_prefix }}@{{ django_app_docker_domain }}"
+
+#######################################
+#                                     #
+# Extra required envvars              #
+#                                     #
+#######################################
+
+# Add extra arbitrary environment variables. These are added to the end of the .env
+# file, and therefore override any earlier entries.
+#
+# Format:
+#
+#   django_app_docker_extra_env:
+#     SOME_ENVVAR: some-value
+#
+django_app_docker_extra_env: {}
