@@ -124,7 +124,7 @@ Example Playbook
     django_app_docker_db_username: example1
     django_app_docker_db_password: example1
     django_app_docker_version: latest
-    django_app_docker_image_name: scrumteamzgw/zaakafhandelcomponent
+    django_app_docker_image_name: scrumteamzgw/bptl
     django_app_docker_replicas: 1
     django_app_docker_port_start: 8000
 
@@ -134,7 +134,34 @@ Example Playbook
 
 **Celery enabled deploy - Django backend + celery**
 
-TODO
+```yaml
+- name: Django playbook with Celery, Beat and Flower
+  hosts: all
+
+  collections:
+    - maykinmedia.commonground
+
+  vars:
+    django_app_docker_name_prefix: example2
+    django_app_docker_domain: example2.maykinmedia.nl
+    django_app_docker_secret_key: '*chbr!n^(s9(13(9j3kkodb4-ptn36)2q-a&2u!c6!tu)^53vr'
+    django_app_docker_package_name: example2
+    django_app_docker_db_name: example2
+    django_app_docker_db_username: example2
+    django_app_docker_db_password: example2
+    django_app_docker_version: latest
+    django_app_docker_image_name: scrumteamzgw/bptl
+    django_app_docker_replicas: 1
+    django_app_docker_port_start: 13000
+
+    django_app_docker_use_celery: true
+    django_app_docker_use_celery_beat: true
+    django_app_docker_use_flower: true
+    django_app_docker_flower_port: 13555
+
+  roles:
+    - role: django_app_docker
+```
 
 License
 -------
