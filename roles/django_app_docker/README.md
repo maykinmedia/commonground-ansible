@@ -79,6 +79,25 @@ Celery integration
   credentials, giving insight into the application internals and possibly data as task
   arguments.
 
+**Facts set**
+
+This role sets some facts that can be used in subsequent roles:
+
+* `django_app_docker_image` the resolved image 'name'. Combines image registry, image name
+  and tag/sha256.
+
+* `_django_app_docker_replicas`: a list of replicas, derived from the number of desired
+  replicas and starting port. You can use this to define nginx upstreams, for example:
+
+  ```yaml
+  - name: <prefix>-0
+    port: 8000
+  - name: <prefix>-1
+    port: 8001
+  - name: <prefix>-2
+    port: 8002
+  ```
+
 Dependencies
 ------------
 
@@ -87,11 +106,35 @@ Dependencies
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+**Standard backend deploy - Django only**
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- name: Simple Django playbook
+  hosts: all
+
+  collections:
+    - maykinmedia.commonground
+
+  vars:
+    django_app_docker_name_prefix: example1
+    django_app_docker_domain: example1.example.com
+    django_app_docker_secret_key: '*chbr!n^(s9(13(9j3kkodb4-ptn36)2q-a&2u!c6!tu)^53vr'
+    django_app_docker_package_name: example1
+    django_app_docker_db_name: example1
+    django_app_docker_db_username: example1
+    django_app_docker_db_password: example1
+    django_app_docker_version: latest
+    django_app_docker_image_name: scrumteamzgw/zaakafhandelcomponent
+    django_app_docker_replicas: 1
+    django_app_docker_port_start: 8000
+
+  roles:
+    - role: django_app_docker
+```
+
+**Celery enabled deploy - Django backend + celery**
+
+TODO
 
 License
 -------
