@@ -1,0 +1,5 @@
+---
+
+django_app_nginx_default_upstream_replicas:
+  - name: "{{ django_app_nginx_prefix }}-0"
+    port: 8000

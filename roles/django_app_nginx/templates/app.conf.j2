@@ -1,0 +1,147 @@
+# {{ ansible_managed }}
+
+upstream {{ django_app_nginx_prefix }} {
+{% for replica in django_app_nginx_upstream_replicas %}
+    server 127.0.0.1:{{ replica.port }};
+{% endfor %}
+}
+
+{% if django_app_nginx_cache %}
+# https://www.nginx.com/blog/nginx-caching-guide/
+proxy_cache_path /tmp/nginx_cache_{{ django_app_nginx_prefix }} levels=1:2 keys_zone=cache_{{ django_app_nginx_prefix }}:500m;
+{% endif %}
+
+# Depending on the domainname, you might instead want to redirect
+# port 80 -> www.{{ django_app_nginx_domain }} and
+# port 443 {{ django_app_nginx_domain }} -> www.{{ django_app_nginx_domain }}
+
+{% if django_app_nginx_ssl %}
+server {
+    server_tokens off;
+    listen 80;
+    server_name {{ django_app_nginx_domain }} www.{{ django_app_nginx_domain }};
+    rewrite ^ https://{{ django_app_nginx_domain }}$request_uri?;
+}
+{% endif %}
+
+server {
+    server_tokens off;
+    listen {% if django_app_nginx_ssl %}443 http2 ssl{% else %}80{% endif %};
+    server_name {{ django_app_nginx_domain }} www.{{ django_app_nginx_domain }};
+    client_max_body_size 4G;
+
+    # Enable Gzip, from html5-boilerplate-server-configs
+    gzip  on;
+    gzip_http_version 1.0;
+    gzip_comp_level 2;
+    gzip_min_length 1100;
+    gzip_buffers     4 8k;
+    gzip_proxied any;
+    gzip_types
+
+      # text/html is always compressed by HttpGzipModule
+      text/css
+      text/javascript
+      text/xml
+      text/plain
+      text/x-component
+      application/javascript
+      application/json
+      application/xml
+      application/rss+xml
+      font/truetype
+      font/opentype
+      application/vnd.ms-fontobject
+      image/svg+xml;
+
+    gzip_static on;
+
+    gzip_proxied        expired no-cache no-store private auth;
+    gzip_disable        "MSIE [1-6]\.";
+    gzip_vary           on;
+
+{% if django_app_nginx_ssl %}
+
+    ssl_protocols {{ django_app_nginx_ssl_protocols }};
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_tickets off;
+
+    ssl_ciphers {{ django_app_nginx_ssl_ciphers }};
+    ssl_prefer_server_ciphers {{ django_app_nginx_ssl_prefer_server_ciphers }};
+
+{% if django_app_nginx_generate_dhparam %}
+    ssl_dhparam /etc/ssl/certs/dhparam.pem;
+{% endif %}
+
+    # OCSP stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    add_header Feature-Policy "autoplay 'none'; camera 'none'" always;
+    add_header Referrer-Policy "same-origin";
+    add_header Strict-Transport-Security "{{ django_app_nginx_ssl_hsts }}" always;
+    add_header X-XSS-Protection "1; mode=block";
+    add_header X-Content-Type-Options nosniff;
+
+    # Note: If using a certificate bundle ensure that the _first_ certificate
+    # in the bundle corresponds with the private key.
+    ssl_certificate {{ django_app_nginx_ssl_certificate | mandatory }};
+    ssl_certificate_key {{ django_app_nginx_ssl_key | mandatory }};
+
+{% endif %}
+
+{% for extra in django_app_nginx_extra_directives %}
+    {{ extra }};
+{% endfor %}
+
+    location / {
+        {% if django_app_nginx_cache %}
+        # Setup var defaults. Explicitly set this flag to an empty string to enable caching
+        set $no_cache "";
+        # If non GET/HEAD, don't cache & mark user as uncacheable for 1 second via cookie
+        if ($request_method !~ ^(GET|HEAD)$) {
+            set $no_cache "1";
+        }
+        # Drop no cache cookie if need be
+        # (for some reason, add_header fails if included in prior if-block)
+        if ($no_cache = "1") {
+            add_header Set-Cookie "_mcnc=1; Max-Age=2; Path=/";
+            add_header X-Microcachable "0";
+        }
+        # Bypass cache if no-cache cookie is set
+        if ($http_cookie ~* "_mcnc") {
+            set $no_cache "1";
+        }
+        # Bypass cache if flag is set
+        proxy_no_cache $no_cache;
+        proxy_cache_bypass $no_cache;
+        proxy_cache_bypass $cookie_sessionid; # Don't cache if we're authenticated
+        proxy_cache cache_{{ django_app_nginx_prefix }};
+        proxy_cache_valid 200 1m;
+        proxy_cache_key $scheme$host$request_method$request_uri;
+        proxy_cache_use_stale error updating timeout http_500 http_502 http_503 http_504;
+        {% endif %}
+
+        proxy_pass_header Server;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host $server_name;
+        proxy_set_header X-Scheme $scheme;
+        proxy_connect_timeout 300s;
+        proxy_read_timeout 300s;
+
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_pass_request_headers on;
+        proxy_pass http://{{ django_app_nginx_prefix }};
+        {% if django_app_nginx_cache %}
+        add_header X-Cache-Status $upstream_cache_status;
+        {% endif %}
+    }
+
+{% for tpl in django_app_nginx_include_templates %}
+    {% include tpl %}
+{% endfor %}
+}
