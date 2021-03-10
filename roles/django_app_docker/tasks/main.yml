@@ -5,6 +5,10 @@
 - import_tasks: setup_env.yml
 
 # Docker infra provisioning
+- import_tasks: dependencies.yml
+# - import_tasks: docker-login.yml
+- import_tasks: volumes.yml
+- import_tasks: network.yml
 
 # Cleanup
 - import_tasks: unset_facts.yml

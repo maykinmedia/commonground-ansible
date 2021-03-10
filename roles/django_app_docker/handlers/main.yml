@@ -1,2 +1,6 @@
 ---
-# handlers file for django_app_docker
+
+- name: print volume mountpoints
+  debug:
+    msg: "Volume '{{ item.name }}' (mounted at {{ item.volume.Mountpoint }}) created"
+  loop: "{{ _django_app_docker_volumes.results }}"
