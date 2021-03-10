@@ -1,5 +1,4 @@
 ---
----
 
 - name: Set image identifier from sha256
   set_fact:
