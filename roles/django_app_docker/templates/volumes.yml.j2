@@ -1,5 +1,6 @@
-volumes:
-  - "{{ _django_app_docker_app_user.home }}/dotenv:/app/.env:ro"
+volumes: {% if not django_app_docker_db_bind_mount and not django_app_docker_volumes %}[]{% endif %}
+{#  - "{{ _django_app_docker_app_user.home }}/dotenv:/app/.env:ro" causes file system permission issues #}
+
 {% if django_app_docker_db_bind_mount %}
   - {{ django_app_docker_db_bind_mount }}:/var/run/postgresql/
 {% endif %}

@@ -98,6 +98,11 @@ django_app_docker_volumes:
 # Bind-mount the database socket directory
 django_app_docker_db_bind_mount: /var/run/postgresql/
 
+# This is the user on the HOST system. Find out which UID is used in the container
+# (usually 1000 for Maykin projects), then look up which user has this UID on the host
+# system.
+django_app_docker_container_user: maykin
+
 #######################################
 #                                     #
 # Celery integration                  #
@@ -130,9 +135,10 @@ django_app_docker_celery_workers:
     grace_time: "{{ django_app_docker_celery_workers_default_grace_time }}"
 
 # Flower: a celery monitoring tool. Use safe credentials and don't share them!
+django_app_docker_flower_port: 5555
+django_app_docker_flower_url_prefix: _flower
 django_app_docker_flower_user: flower  # change this
 django_app_docker_flower_password: flower  # change this
-django_app_docker_basic_auth: "{{ django_app_docker_flower_user }}:{{ django_app_docker_flower_password }}"  # TODO: can be removed?
 
 #######################################
 #                                     #

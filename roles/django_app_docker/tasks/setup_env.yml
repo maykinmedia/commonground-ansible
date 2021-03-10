@@ -21,7 +21,7 @@
     dest: "{{ _django_app_docker_app_user.home }}/dotenv"
     owner: "{{ django_app_docker_name_prefix }}"
     group: "{{ django_app_docker_name_prefix }}"
-    mode: u=rw,g=r,o=r
+    mode: u=rw,g=r,o=
   register: _django_app_docker_env_file
 
 # TODO: django_app_nginx role which sets up the nginx user access to volumes?

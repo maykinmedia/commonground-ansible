@@ -1,0 +1,25 @@
+---
+
+container_default_behavior: no_defaults
+name: "{{ django_app_docker_name_prefix }}-beat"
+image: "{{ django_app_docker_image | mandatory }}"
+command: ["/celery_beat.sh"]
+hostname: "{{ django_app_docker_name_prefix }}-beat"
+state: started
+pull: yes  # always pull
+restart: "{{ _django_app_docker_env_file.changed }}"
+restart_policy: always
+{% include 'networks.yml.j2' %}
+
+privileged: no
+log_driver: json-file
+log_options:
+  max-size: 10m
+  max-file: '10'
+
+{% include 'volumes.yml.j2' %}
+{% include 'container-env.yml.j2' %}
+
+comparisons:
+  env: strict
+  volumes: strict
