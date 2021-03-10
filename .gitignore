@@ -6,3 +6,8 @@ env/
 # built collections & local installations
 *.tar.gz
 /collections
+
+# test playbook
+ansible.cfg
+hosts
+test-playbook.yml
