@@ -2,3 +2,7 @@
 env/
 .env
 *.retry
+
+# built collections & local installations
+*.tar.gz
+/collections
