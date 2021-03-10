@@ -19,7 +19,9 @@
   template:
     src: "{{ django_app_docker_env_template|default('env.j2') }}"
     dest: "{{ _django_app_docker_app_user.home }}/dotenv"
-    mode: 0400
+    owner: "{{ django_app_docker_name_prefix }}"
+    group: "{{ django_app_docker_name_prefix }}"
+    mode: u=rw,g=r,o=r
   register: _django_app_docker_env_file
 
 # TODO: django_app_nginx role which sets up the nginx user access to volumes?

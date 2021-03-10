@@ -1,0 +1,10 @@
+---
+
+{% for worker in django_app_docker_celery_workers %}
+{% set worker_count = worker.replicas | default(django_app_docker_celery_workers_default_replicas) %}
+{% for n in range(worker_count) %}
+- name: {{ django_app_docker_name_prefix }}-{{ worker.queue }}-{{ n }}
+  queue: {{ worker.queue }}
+  grace_time: {{ worker.grace_time }}
+{% endfor %}
+{% endfor %}

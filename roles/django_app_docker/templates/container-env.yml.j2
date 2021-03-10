@@ -2,3 +2,6 @@ env:
   DB_HOST: "{{ django_app_docker_db_host }}"
   DB_PORT: "{{ django_app_docker_db_port | string }}"
   SECRET_KEY: "{{ django_app_docker_secret_key }}"
+{% if django_app_docker_use_celery and item.queue is defined %}
+  CELERY_WORKER_QUEUE: "{{ item.queue }}"
+{% endif %}

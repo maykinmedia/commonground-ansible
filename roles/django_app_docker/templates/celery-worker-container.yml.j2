@@ -3,6 +3,7 @@
 container_default_behavior: no_defaults
 name: "{{ item.name }}"
 image: "{{ django_app_docker_image | mandatory }}"
+command: ["/celery_worker.sh"]
 hostname: "{{ item.name }}"
 state: started
 pull: yes  # always pull
@@ -19,8 +20,7 @@ log_options:
 {% include 'volumes.yml.j2' %}
 {% include 'container-env.yml.j2' %}
 
-published_ports:
-  - "127.0.0.1:{{ item.port }}:8000"
+stop_timeout: "{{ item.grace_time | default(django_app_docker_celery_workers_default_grace_time) }}"
 comparisons:
   env: strict
   volumes: strict
