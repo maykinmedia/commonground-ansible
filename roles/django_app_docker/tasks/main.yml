@@ -10,5 +10,7 @@
 - import_tasks: volumes.yml
 - import_tasks: network.yml
 
+- import_tasks: containers.yml
+
 # Cleanup
 - import_tasks: unset_facts.yml

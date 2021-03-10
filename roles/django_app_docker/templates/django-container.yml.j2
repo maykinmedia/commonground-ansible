@@ -1,0 +1,23 @@
+---
+
+container_default_behavior: no_defaults
+name: "{{ item.name }}"
+image: "{{ django_app_docker_image | mandatory }}"
+hostname: "{{ item.name }}"
+state: started
+pull: yes  # always pull
+restart: "{{ _django_app_docker_env_file.changed }}"
+restart_policy: always
+{% include 'networks.yml.j2' %}
+
+privileged: no
+log_driver: json-file
+log_options:
+  max-size: 10m
+  max-file: '10'
+
+{% include 'volumes.yml.j2' %}
+{% include 'container-env.yml.j2' %}
+
+published_ports:
+  - "127.0.0.1:{{ item.port }}:8000"

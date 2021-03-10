@@ -1,0 +1,17 @@
+---
+
+# https://docs.ansible.com/ansible/devel/reference_appendices/faq.html#when-is-it-unsafe-to-bulk-set-task-arguments-from-a-variable
+#
+# This should be safe since we use a lookup which renders a template, rather than
+# accepting host facts.
+
+- name: "Run the cache/broker service ({{ django_app_docker_cache_image }})"
+  community.docker.docker_container: "{{ lookup('template', 'redis-container.yml.j2') | from_yaml }}"
+
+- name: Determine the replicas
+  set_fact:
+    _django_app_docker_replicas: "{{ lookup('template', 'replicas.yml.j2') | from_yaml }}"
+
+- name: "Run the django backend containers"
+  community.docker.docker_container: "{{ lookup('template', 'django-container.yml.j2') | from_yaml }}"
+  loop: "{{ _django_app_docker_replicas }}"

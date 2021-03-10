@@ -12,6 +12,6 @@
 
 - name: Derive django_app_docker_image variable
   set_fact:
-    django_app_docker_image: "{{ django_app_docker_image_registry }}{{ django_app_docker_image_name }}{{ __django_app_docker_image_identifier }}"
+    django_app_docker_image: "{{ django_app_docker_image_registry }}/{{ django_app_docker_image_name }}{{ __django_app_docker_image_identifier }}"
     django_app_docker_unset_image: yes
   when: django_app_docker_image is not defined or django_app_docker_image == None

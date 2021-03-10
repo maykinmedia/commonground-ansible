@@ -43,6 +43,7 @@ django_app_docker_db_password: django_app  # override this!
 django_app_docker_extra_dbs: {}
 
 # Redis cache
+django_app_docker_cache_image: docker.io/library/redis:6
 django_app_docker_cache_db: 0  # change this if you're using a shared redis instance
 django_app_docker_extra_caches: []
 

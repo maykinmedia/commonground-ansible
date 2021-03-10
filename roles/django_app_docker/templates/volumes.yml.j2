@@ -1,0 +1,8 @@
+volumes:
+  - "{{ _django_app_docker_app_user.home }}/dotenv:/app/.env:ro"
+{% if django_app_docker_db_bind_mount %}
+  - {{ django_app_docker_db_bind_mount }}:/var/run/postgresql/
+{% endif %}
+{% for volume in django_app_docker_volumes %}
+  - "{{ volume.name }}:{{ volume.mount }}:{{ volume.mode }}"
+{% endfor %}
