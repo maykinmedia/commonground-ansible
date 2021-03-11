@@ -28,7 +28,6 @@ server {
     server_tokens off;
     listen {% if django_app_nginx_ssl %}443 http2 ssl{% else %}80{% endif %};
     server_name {{ django_app_nginx_domain }} www.{{ django_app_nginx_domain }};
-    client_max_body_size 4G;
 
     # Enable Gzip, from html5-boilerplate-server-configs
     gzip  on;
