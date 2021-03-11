@@ -1,0 +1,62 @@
+---
+
+kind: Deployment
+apiVersion: v1
+metadata:
+  labels:
+    app.kubernetes.io/name: "{{ django_app_k8s_name_prefix }}-nginx"
+    app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
+    app.kubernetes.io/version: "latest"
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
+    app.kubernetes.io/managed-by: Ansible
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "{{ django_app_k8s_name_prefix }}-nginx"
+      app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
+      app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
+  template:
+    metadata:
+      name: nginx
+      labels:
+        app.kubernetes.io/name: "{{ django_app_k8s_name_prefix }}-nginx"
+        app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
+        app.kubernetes.io/version: "latest"
+        app.kubernetes.io/component: webserver
+        app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
+        app.kubernetes.io/managed-by: Ansible
+    spec:
+      volumes:
+        - name: config
+          configMap:
+            name: {{ django_app_k8s_name_prefix }}-nginx
+      containers:
+      - name: nginx
+        image: harbor.utrechtproeftuin.nl/common-ground/library/nginx:latest
+
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "250Mi"
+            cpu: "250m"
+
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /
+            httpHeaders:
+              - name: Host
+                value: localhost
+
+        livenessProbe:
+          httpGet:
+            port: 80
+            path: /_health/
+
+        volumeMounts:
+          - name: config
+            mountPath: /etc/nginx/conf.d/

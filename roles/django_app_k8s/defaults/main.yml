@@ -1,0 +1,192 @@
+---
+
+# Cluster namespace to use
+django_app_k8s_namespace: django-app
+django_app_k8s_manage_namespace: false
+
+django_app_k8s_name_prefix: app
+
+#######################################
+#                                     #
+# General Django settings             #
+#                                     #
+#######################################
+
+django_app_k8s_domain: "{{ django_app_k8s_namespace }}.example.com"
+
+django_app_k8s_secret_key: override-me
+
+# List of allowed hosts
+django_app_k8s_allowed_hosts:
+  - localhost
+  - '127.0.0.1'
+  - "{{ django_app_k8s_domain }}"
+  - "www.{{ django_app_k8s_domain }}"
+  # k8s service + namespace, to have inway point to internal service
+  - "{{ django_app_k8s_name_prefix }}.{{ django_app_k8s_namespace }}"
+
+# Database connection parameters
+django_app_k8s_db_engine: 'django.db.backends.postgresql'
+django_app_k8s_db_host: db.example.com
+django_app_k8s_db_port: 5432
+django_app_k8s_db_name: django_app  # override this!
+django_app_k8s_db_username: django_app  # override this!
+django_app_k8s_db_password: django_app  # override this!
+
+# Any additional databases that need to be configured.
+# Format:
+#
+#   PREFIX:
+#     host: db1.example.com
+#     name: example
+#     username: extra-user
+#     password: sekret
+#
+#  This results in the envvars PREFIX_DB_HOST, PREFIX_DB_NAME...
+django_app_k8s_extra_dbs: {}
+
+# Redis cache
+django_app_k8s_cache_image: docker.io/library/redis:6
+django_app_k8s_cache_db: 0  # change this if you're using a shared redis instance
+django_app_k8s_extra_caches: []
+
+# Error monitoring - Sentry integration. Disabled by default, set a value to opt-in.
+django_app_k8s_sentry_dsn: null
+
+# Name of the python package containing the app, found in the `src/` directory
+# of the project.
+django_app_k8s_package_name: "{{ django_app_k8s_name_prefix }}"
+
+#######################################
+#                                     #
+# Container image definition          #
+#                                     #
+#######################################
+
+# Container image version to use
+django_app_k8s_version: latest  # use a tag
+django_app_k8s_sha256: null  # or use a sha256 hash
+
+# Container registry
+django_app_k8s_image_registry: docker.io  # use Docker Hub by default
+# Image repository. Combined with `django_app_k8s_image_registry` and
+# `django_app_k8s_version` or `django_app_k8s_sha256`, this leads to a fully
+# qualified image reference.
+django_app_k8s_image_name: "maykinmedia/{{ django_app_k8s_name_prefix }}"
+# `django_app_k8s_image` is derived automatically
+
+django_app_k8s_image_pull_policy: IfNotPresent
+
+#######################################
+#                                     #
+# Deployment metadata                 #
+#                                     #
+#######################################
+
+django_app_k8s_replicas: 3
+
+django_app_k8s_group: "{{ django_app_k8s_name_prefix }}"
+django_app_k8s_instance: test
+
+#######################################
+#                                     #
+# Volumes                             #
+#                                     #
+#######################################
+
+django_app_k8s_pvc: false
+django_app_k8s_storage: 1G
+django_app_k8s_storage_class: ''  # or `'
+django_app_k8s_storage_access_mode: ReadWriteMany
+
+django_app_k8s_extra_volume_mounts: []
+
+#######################################
+#                                     #
+# Ingress configuration               #
+#                                     #
+#######################################
+
+# Set to true to also configure an ingress
+django_app_k8s_ingress: false
+
+# Include the ingress-type specific annotations. Defaults use Traefik 1.x
+django_app_k8s_ingress_template: 'ingress.yml.j2'
+django_app_k8s_ingress_annotations:
+  kubernetes.io/ingress.class: traefik-public
+  traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+
+django_app_k8s_extra_ingress_paths: []
+
+# Whether to deploy nginx in front of the app containers (and behind the ingress) or not.
+django_app_k8s_add_nginx: false
+django_app_k8s_nginx_config_template: 'nginx-config.yml.j2'
+
+#######################################
+#                                     #
+# Celery integration                  #
+#                                     #
+#######################################
+
+# Global toggles - set to `true` to have other variables have effect
+django_app_k8s_use_celery: false
+django_app_k8s_use_celery_beat: false
+django_app_k8s_use_flower: false
+
+# Which redis DB to use as broker/result backend
+django_app_k8s_celery_db: 1
+django_app_k8s_celery_broker_url: "redis://{{ django_app_k8s_name_prefix }}-redis:6379/{{ django_app_k8s_celery_db }}"
+django_app_k8s_celery_result_backend: "{{ django_app_k8s_celery_broker_url }}"
+
+# container stop sends TERM for graceful termination, after this grace period, a KILL
+# is issued. You should set this per worker with the maximum duration of a task (should
+# be slightly higher than the task timeout)
+django_app_k8s_celery_workers_default_grace_time: 30
+
+# Default amount of worker containers. Note that each container can spawn one or more
+# worker processes.
+django_app_k8s_celery_workers_default_replicas: 2
+
+# Definition of worker queues. The default queue is named 'celery'
+django_app_k8s_celery_workers:
+  - queue: celery
+    replicas: "{{ django_app_k8s_celery_workers_default_replicas }}"
+    grace_time: "{{ django_app_k8s_celery_workers_default_grace_time }}"
+
+# Flower: a celery monitoring tool. Use safe credentials and don't share them!
+django_app_k8s_flower_port: 5555
+django_app_k8s_flower_url_prefix: _flower
+django_app_k8s_flower_user: flower
+django_app_k8s_flower_password: flower
+
+#######################################
+#                                     #
+# Outgoing e-mail configuration       #
+#                                     #
+#######################################
+
+# Main toggle, set to `true` to have other variables have any effect.
+django_app_k8s_mail: false
+
+django_app_k8s_mail_host: localhost
+django_app_k8s_mail_port: '25'
+django_app_k8s_mail_user: ''
+django_app_k8s_mail_password: ''
+django_app_k8s_mail_use_tls: 'no'
+django_app_k8s_mail_default_from: "{{ django_app_k8s_package_name }}@{{ django_app_k8s_domain }}"
+
+#######################################
+#                                     #
+# Extra required envvars              #
+#                                     #
+#######################################
+
+# Add extra arbitrary environment variables. These are added to the end of the .env
+# file, and therefore override any earlier entries.
+#
+# Format:
+#
+#   django_app_k8s_extra_env:
+#     SOME_ENVVAR: some-value
+#
+django_app_k8s_extra_env: {}

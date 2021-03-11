@@ -1,0 +1,38 @@
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    app.kubernetes.io/name: "{{ django_app_k8s_name_prefix }}"
+    app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
+    app.kubernetes.io/version: "{{ django_app_k8s_version }}"
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
+    app.kubernetes.io/managed-by: Ansible
+  annotations: {{ django_app_k8s_ingress_annotations }}
+spec:
+  rules:
+  - host: "{{ django_app_k8s_domain }}"
+    http:
+      paths:
+      - path: /
+        backend:
+{% if django_app_k8s_add_nginx %}
+          serviceName: {{ django_app_k8s_name_prefix }}-nginx
+          servicePort: 80
+{% else %}
+          serviceName: {{ django_app_k8s_name_prefix }}
+          servicePort: 8000
+{% endif %}
+
+{% if django_app_k8s_use_flower %}
+      - path: /{{ django_app_k8s_flower_url_prefix }}
+        backend:
+          serviceName: {{ django_app_k8s_name_prefix }}-monitoring
+          servicePort: {{ django_app_k8s_flower_port }}
+{% endif %}
+
+{% for extra_route in django_app_k8s_extra_ingress_paths %}
+      - {{ extra_route }}
+{% endfor %}

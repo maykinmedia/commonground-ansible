@@ -1,0 +1,45 @@
+---
+
+- name: Set up the redis service
+  k8s:
+    state: present
+    name: "{{ django_app_k8s_name_prefix }}-redis"
+    namespace: "{{ django_app_k8s_namespace }}"
+    definition: "{{ lookup('template', 'redis-svc.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+
+
+- name: Set up the app service
+  k8s:
+    state: present
+    name: "{{ django_app_k8s_name_prefix }}"
+    namespace: "{{ django_app_k8s_namespace }}"
+    definition: "{{ lookup('template', 'app-svc.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+
+
+- name: Set up the flower service
+  k8s:
+    state: present
+    name: "{{ django_app_k8s_name_prefix }}-monitoring"
+    namespace: "{{ django_app_k8s_namespace }}"
+    definition: "{{ lookup('template', 'flower-svc.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  when: django_app_k8s_use_flower
+
+- name: Set up the nginx service
+  k8s:
+    state: present
+    name: "{{ django_app_k8s_name_prefix }}-nginx"
+    namespace: "{{ django_app_k8s_namespace }}"
+    definition: "{{ lookup('template', 'nginx-svc.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  when: django_app_k8s_add_nginx
