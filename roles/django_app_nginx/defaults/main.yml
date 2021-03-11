@@ -6,7 +6,7 @@ django_app_nginx_upstream_replicas: "{{ _django_app_docker_replicas | default(dj
 
 django_app_nginx_proto_value: '$scheme'
 
-django_app_nginx_ssl: true
+django_app_nginx_ssl: "{{ django_app_docker_https if django_app_docker_https is defined else True }}"
 django_app_nginx_letsencrypt_enabled: "{[ django_app_nginx_ssl and cerbot_certs is defined }}"
 # django_app_nginx_ssl_certificate: /path/to/ssl-cert-chain.pem
 # django_app_nginx_ssl_key: /path/to/ssl-key.pem
