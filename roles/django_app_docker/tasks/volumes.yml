@@ -17,8 +17,8 @@
   file:
     path: "{{ item.volume.Mountpoint }}"
     state: directory
-    owner: "{{ item.owner | default(django_app_docker_name_prefix) }}"
-    group: "{{ item.group | default(django_app_docker_name_prefix) }}"
-    recurse: "{{ item.recurse | default(False) }}"
-    mode: "{{ item.perms | default('u=rwx,g=rx,o-rwx') }}"
+    owner: "{{ item.item.owner | default(django_app_docker_name_prefix) }}"
+    group: "{{ item.item.group | default(django_app_docker_name_prefix) }}"
+    recurse: "{{ item.item.recurse | default(False) }}"
+    mode: "{{ item.item.perms | default('u=rwx,g=rx,o-rwx') }}"
   loop: "{{ _django_app_docker_volumes.results }}"
