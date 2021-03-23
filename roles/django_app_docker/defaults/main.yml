@@ -94,6 +94,7 @@ django_app_docker_volumes:
   - name: "{{ django_app_docker_name_prefix }}-media"
     mount: "/app/media"
     mode: "rw"
+    owner: 1000
 
 # Bind-mount the database socket directory
 django_app_docker_db_bind_mount: /var/run/postgresql/
