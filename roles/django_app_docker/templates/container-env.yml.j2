@@ -6,3 +6,6 @@ env:
 {% if django_app_docker_use_celery and item.queue is defined %}
   CELERY_WORKER_QUEUE: "{{ item.queue }}"
 {% endif %}
+{% if django_app_docker_use_flower and django_app_docker_flower_url_prefix %}
+  FLOWER_URL_PREFIX: "{{ django_app_docker_flower_url_prefix }}"
+{% endif %}
