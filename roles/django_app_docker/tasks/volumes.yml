@@ -6,6 +6,7 @@
     labels:
       maykinmedia.commonground.django_app_docker/mountpoint: "{{ item.mount | mandatory }}"
       maykinmedia.commonground.django_app_docker/mode: "{{ item.mode | mandatory }}"
+  when: item.hostPath is not defined or not item.hostPath  # only create docker volumes if we're not bind mounting
   loop: "{{ django_app_docker_volumes }}"
   register: _django_app_docker_volumes
   notify:
@@ -21,4 +22,5 @@
     group: "{{ item.item.group | default(django_app_docker_name_prefix) }}"
     recurse: "{{ item.item.recurse | default(False) }}"
     mode: "{{ item.item.perms | default('u=rwx,g=rx,o-rwx') }}"
+  when: item.item.hostPath is not defined or not item.item.hostPath  # only create docker volumes if we're not bind mounting
   loop: "{{ _django_app_docker_volumes.results }}"

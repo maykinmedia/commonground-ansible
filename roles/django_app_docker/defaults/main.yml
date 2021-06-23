@@ -93,6 +93,7 @@ django_app_docker_port_start: 8000
 django_app_docker_volumes:
   - name: "{{ django_app_docker_name_prefix }}-media"
     mount: "/app/media"
+    # hostPath: ''  # optional to bind-mount instead of creating a docker volume
     mode: "rw"
     owner: 1000
 
