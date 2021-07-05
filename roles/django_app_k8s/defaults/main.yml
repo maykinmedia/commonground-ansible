@@ -1,0 +1,105 @@
+---
+
+django_app_k8s_namespace: django-app
+django_app_k8s_manage_namespace: false
+django_app_k8s_name_prefix: app
+django_app_k8s_domain: "{{ django_app_k8s_namespace }}.domain"
+django_app_k8s_secret_key: override-me
+
+django_app_k8s_db_host: localhost
+django_app_k8s_db_port: 5432
+django_app_k8s_db_name: django_app
+django_app_k8s_db_username: django_app
+django_app_k8s_db_password: django_app
+
+django_app_k8s_extra_dbs: {}
+
+django_app_k8s_cache_db: 0
+django_app_k8s_extra_caches: []
+
+django_app_k8s_sentry_dsn: null
+
+django_app_k8s_package_name: "{{ django_app_k8s_namespace }}"
+django_app_k8s_version: latest
+
+# container image to use
+django_app_k8s_sha256: null
+django_app_k8s_image_registry: docker.io/
+django_app_k8s_image_name: "organization/{{ django_app_k8s_namespace }}"
+# `django_app_k8s_image` is derived automatically
+
+django_app_k8s_replicas: 1
+
+django_app_k8s_group: "{{ django_app_k8s_package_name }}"
+django_app_k8s_instance: test
+
+django_app_k8s_pvc: false
+django_app_k8s_storage: 1G
+django_app_k8s_storage_class: 'azurefile'  # or `azurefile-premium'
+
+django_app_k8s_use_celery: no
+django_app_k8s_use_celery_beat: no
+django_app_k8s_celery_replicas: 2
+django_app_k8s_celery_db: 1
+django_app_k8s_celery_broker_url: "redis://{{ django_app_k8s_name_prefix }}-redis:6379/{{ django_app_k8s_celery_db }}"
+django_app_k8s_celery_result_backend: "{{ django_app_k8s_celery_broker_url }}"
+
+# container stop sends TERM for graceful termination, after this grace period, a KILL
+# is issued. You should set this per worker with the maximum duration of a task (should
+# be slightly higher than the task timeout)
+django_app_k8s_celery_workers_default_grace_time: 30
+
+django_app_k8s_celery_workers:
+  - queue: celery  # celery is the default queue name
+    replicas: "{{ django_app_k8s_celery_replicas }}"  # backwards compatible variables
+    grace_time: "{{ django_app_k8s_celery_workers_default_grace_time }}"
+
+django_app_k8s_flower_user: flower
+django_app_k8s_flower_password: flower
+django_app_k8s_flower_basic_auth: "{{ django_app_k8s_flower_user }}:{{ django_app_k8s_flower_password }}"
+
+django_app_k8s_mail: false
+django_app_k8s_mail_host: localhost  # requires the plays/mail.yml
+django_app_k8s_mail_port: '25'
+django_app_k8s_mail_user: ''
+django_app_k8s_mail_password: ''
+django_app_k8s_mail_use_tls: 'no'
+django_app_k8s_mail_default_from: "{{ django_app_k8s_package_name }}@example.com"
+
+django_app_k8s_allowed_hosts:
+  - localhost
+  - "{{ django_app_k8s_domain }}"
+  # k8s service + namespace, to have inway point to internal service
+  - "{{ django_app_k8s_name_prefix }}.{{ django_app_k8s_namespace }}"
+
+django_app_k8s_extra_env: {}
+
+django_app_k8s_extra_volume_mounts: []
+
+django_app_k8s_ingress: false
+django_app_k8s_extra_ingress_paths: []
+
+django_app_k8s_tls: no
+
+django_app_k8s_add_nginx: no
+
+django_app_k8s_resource_requests:
+  memory: "500Mi"
+  cpu: "100m"
+
+django_app_k8s_resource_limits:
+  memory: "1Gi"
+  cpu: "1000m"
+
+
+# Example structure:
+#
+# django_app_k8s_cronjobs:
+#   - name: clearsessions
+#     schedule: "15 2 * * *"  # at 02:15
+#     managementCommand: clearsessions
+#
+django_app_k8s_cronjobs: []
+
+django_app_k8s_job_annotations:
+  sidecar.istio.io/inject: "false"

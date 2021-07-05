@@ -1,0 +1,55 @@
+---
+
+kind: Deployment
+apiVersion: v1
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ django_app_k8s_name_prefix }}-redis
+    app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
+    app.kubernetes.io/version: "5.0"
+    app.kubernetes.io/component: redis
+    app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
+    app.kubernetes.io/managed-by: Ansible
+spec:
+  # single replica because objects are kept in memory
+  # TODO: share cache/storage?
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ django_app_k8s_name_prefix }}-redis
+      app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
+      app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
+  template:
+    metadata:
+      name: {{ django_app_k8s_name_prefix }}-redis
+      labels:
+        app.kubernetes.io/name: {{ django_app_k8s_name_prefix }}-redis
+        app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
+        app.kubernetes.io/version: "5.0"
+        app.kubernetes.io/component: redis
+        app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
+        app.kubernetes.io/managed-by: Ansible
+    spec:
+      containers:
+      - name: redis
+        image: {{ django_app_k8s_image_registry }}library/redis:5.0
+
+        resources:
+          requests:
+            memory: "100Mi"
+            cpu: "100m"
+          limits:
+            memory: "200Mi"
+            cpu: "250m"
+
+        readinessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 15
+          periodSeconds: 20

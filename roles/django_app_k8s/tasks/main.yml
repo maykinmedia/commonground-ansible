@@ -1,0 +1,24 @@
+---
+
+- import_tasks: set_facts.yml
+
+- import_tasks: namespace.yml
+  when: django_app_k8s_manage_namespace
+
+- import_tasks: config.yml
+- import_tasks: secrets.yml
+
+- import_tasks: tls.yml
+  when: django_app_k8s_tls
+
+- import_tasks: services.yml
+- import_tasks: storage.yml
+
+- import_tasks: deployments.yml
+
+- import_tasks: jobs.yml
+
+- import_tasks: ingress.yml
+  when: django_app_k8s_ingress
+
+- import_tasks: unset_facts.yml
