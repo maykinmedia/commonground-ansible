@@ -1,0 +1,64 @@
+---
+
+kind: Deployment
+apiVersion: v1
+metadata:
+  labels:
+    app.kubernetes.io/name: celery
+    celeryproject.org/queue: "{{ item.queue }}"
+    app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
+    app.kubernetes.io/version: "{{ django_app_k8s_version }}"
+    app.kubernetes.io/component: async-workers
+    app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
+    app.kubernetes.io/managed-by: Ansible
+spec:
+  replicas: {{ item.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: celery
+      celeryproject.org/queue: "{{ item.queue }}"
+      app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
+      app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
+  template:
+    metadata:
+      name: "{{ item.queue }}-worker"
+      labels:
+        app.kubernetes.io/name: celery
+        celeryproject.org/queue: "{{ item.queue }}"
+        app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
+        app.kubernetes.io/version: "{{ django_app_k8s_version }}"
+        app.kubernetes.io/component: async-workers
+        app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
+        app.kubernetes.io/managed-by: Ansible
+    spec:
+
+      #  after this time, the pod will receive a KILL if it didn't exit because of the
+      #  TERM signal sent. Set high enough values for long-running tasks
+      terminationGracePeriodSeconds: {{ item.grace_time|default(django_app_k8s_celery_workers_default_grace_time) }}
+
+{% if django_app_k8s_pvc %}
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: {{ django_app_k8s_name_prefix }}-storage
+{% endif %}
+
+      containers:
+      - name: celery
+        image: {{ django_app_k8s_image }}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+
+        command: ["/celery_worker.sh"]
+
+{% if django_app_k8s_pvc %}
+        volumeMounts: {{ django_app_k8s_app_volume_mounts }}
+{% endif %}
+
+        env: {{ django_app_k8s_app_env }}
