@@ -70,8 +70,9 @@ Host machine interface:
 
 * `django_app_docker_replicas` - number of backend containers to run (web). Increasing
   this number consumes more resources but allows you to handle more concurrent requests.
-* `django_app_docker_port_start` - ports published from Docker to the host. Make sure
-  these ports are available. Defaults to `8000`.
+* `django_app_docker_port_range` - ports published from Docker to the host. 
+  The ports will be selected by the Docker daemon in the given range. Make sure
+  enough ports are available in the given range. Defaults to `14000-15000`.
 
 Celery integration
 
@@ -126,7 +127,7 @@ Example Playbook
     django_app_docker_version: latest
     django_app_docker_image_name: scrumteamzgw/bptl
     django_app_docker_replicas: 1
-    django_app_docker_port_start: 8000
+    django_app_docker_port_range: 8000-8010
 
   roles:
     - role: django_app_docker
@@ -152,12 +153,12 @@ Example Playbook
     django_app_docker_version: latest
     django_app_docker_image_name: scrumteamzgw/bptl
     django_app_docker_replicas: 1
-    django_app_docker_port_start: 13000
+    django_app_docker_port_range: 13000-13010
 
     django_app_docker_use_celery: true
     django_app_docker_use_celery_beat: true
     django_app_docker_use_flower: true
-    django_app_docker_flower_port: 13555
+    django_app_docker_flower_port: "{{ django_app_docker_port_range }}"
 
   roles:
     - role: django_app_docker

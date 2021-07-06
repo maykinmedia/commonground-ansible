@@ -15,6 +15,7 @@
 - name: "Run the django backend containers"
   community.docker.docker_container: "{{ lookup('template', 'django-container.yml.j2') | from_yaml }}"
   loop: "{{ _django_app_docker_replicas }}"
+  register: backend_ports
 
 - name: Determine the celery worker replicas
   set_fact:
@@ -33,3 +34,4 @@
 - name: "Run the celery flower container"
   community.docker.docker_container: "{{ lookup('template', 'celery-flower-container.yml.j2') | from_yaml }}"
   when: django_app_docker_use_flower
+  register: flower_ports
