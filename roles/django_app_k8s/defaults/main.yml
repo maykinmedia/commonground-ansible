@@ -76,11 +76,13 @@ django_app_k8s_extra_env: {}
 
 django_app_k8s_extra_volume_mounts: []
 
+# Ingress options
 django_app_k8s_ingress: false
+django_app_k8s_ingress_annotations:
+  kubernetes.io/ingress.class: traefik-public
+  traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
 django_app_k8s_extra_ingress_paths: []
-
 django_app_k8s_tls: no
-
 django_app_k8s_add_nginx: no
 
 django_app_k8s_resource_requests:
@@ -90,7 +92,6 @@ django_app_k8s_resource_requests:
 django_app_k8s_resource_limits:
   memory: "1Gi"
   cpu: "1000m"
-
 
 # Example structure:
 #

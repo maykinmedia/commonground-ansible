@@ -1,44 +1,49 @@
 ---
 
 kind: Ingress
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 metadata:
   labels:
-    app.kubernetes.io/name: traefik
+    app.kubernetes.io/name: ingress
     app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
     app.kubernetes.io/version: "{{ django_app_k8s_version }}"
     app.kubernetes.io/component: backend
     app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
     app.kubernetes.io/managed-by: Ansible
-  annotations:
-    kubernetes.io/ingress.class: traefik-public
-    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+  annotations: {{ django_app_k8s_ingress_annotations }}
 spec:
 {% if django_app_k8s_tls %}
   tls:
     - hosts:
-        - "{{ django_app_k8s_domain }}"
-      secretName: "{{ django_app_k8s_name_prefix }}-tls-secrets"
+      - "{{ django_app_k8s_domain }}"
+      secretName: "{{ django_app_k8s_name_prefix }}-tls"
 {% endif %}
   rules:
   - host: "{{ django_app_k8s_domain }}"
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
+          service:
 {% if django_app_k8s_add_nginx %}
-          serviceName: {{ django_app_k8s_name_prefix }}-nginx
-          servicePort: 80
+            name: {{ django_app_k8s_name_prefix }}-nginx
+            port:
+              number: 80
 {% else %}
-          serviceName: {{ django_app_k8s_name_prefix }}
-          servicePort: 8000
+            name: {{ django_app_k8s_name_prefix }}
+            port:
+              number: 8000
 {% endif %}
 
 {% if django_app_k8s_use_celery %}
       - path: /_flower
+        pathType: ImplementationSpecific
         backend:
-          serviceName: {{ django_app_k8s_name_prefix }}-monitoring
-          servicePort: 5555
+          service:
+            name: {{ django_app_k8s_name_prefix }}-monitoring
+            port:
+              number: 5555
 {% endif %}
 
 {% for extra_route in django_app_k8s_extra_ingress_paths %}
