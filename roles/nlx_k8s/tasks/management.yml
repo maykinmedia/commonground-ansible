@@ -1,5 +1,8 @@
 ---
 
+- import_tasks: dex.yml
+  when: nlx_dex
+
 - set_fact:
     _nlx_mgmt_api_extra_labels:
       app.kubernetes.io/name: management-api
