@@ -29,11 +29,11 @@ spec:
           command: ['/usr/local/bin/upgrade-db.sh']
           env:
             - name: PGHOST
-              value: "{{ nlx_txlog_db_host }}"
+              value: "{{ nlx_txlog_db.host }}"
             - name: PGPORT
-              value: "{{ nlx_txlog_db_port }}"
+              value: "{{ nlx_txlog_db.port }}"
             - name: PGDATABASE
-              value: "{{ nlx_txlog_db_name }}"
+              value: "{{ nlx_txlog_db.name }}"
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
@@ -68,11 +68,11 @@ spec:
 
           resources:
             requests:
-              memory: "500Mi"
-              cpu: "200m"
+              memory: "10Mi"
+              cpu: "10m"
             limits:
-              memory: "1Gi"
-              cpu: "1000m"
+              memory: "500Mi"
+              cpu: "1"
 
           livenessProbe:
             httpGet:
@@ -93,7 +93,7 @@ spec:
             - name: DIRECTORY_REGISTRATION_ADDRESS
               value: "{{ nlx_inway_directory_registration_address }}"
             - name: INWAY_NAME
-              value: "NLX Inway {{ nlx_instance }}"
+              value: "{{ nlx_inway_name }}"
             - name: SELF_ADDRESS
               value: "{{ nlx_inway_self_address }}"
 

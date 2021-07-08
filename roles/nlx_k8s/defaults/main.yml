@@ -89,7 +89,7 @@ nlx_inway_replicas: 1
 nlx_inway_directory_registration_address: directory-registration-api.demo.nlx.io:443
 nlx_inway_self_address: inway.example.com:8443
 nlx_inway_service_type: LoadBalancer  # creates a public IP by default via the cloud provider infra
-
+nlx_inway_name: "inway-{{ nlx_instance }}"
 
 #
 # Outway
