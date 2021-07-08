@@ -42,8 +42,8 @@ spec:
 
           resources:
             requests:
-              memory: "200Mi"
-              cpu: "100m"
+              memory: "10Mi"
+              cpu: "10m"
             limits:
               memory: "400Mi"
               cpu: "500m"
@@ -52,4 +52,4 @@ spec:
             - name: LISTEN_ADDRESS
               value: "0.0.0.0:8080"
             - name: MANAGEMENT_API_URL
-              value: http://nlx-management-api-{{ nlx_instance }}
+              value: http://nlx-management-api-{{ nlx_instance }}:8080
