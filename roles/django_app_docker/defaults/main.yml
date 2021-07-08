@@ -137,7 +137,7 @@ django_app_docker_celery_workers:
     grace_time: "{{ django_app_docker_celery_workers_default_grace_time }}"
 
 # Flower: a celery monitoring tool. Use safe credentials and don't share them!
-django_app_docker_flower_port: "{{ django_app_docker_port_range }}"
+django_app_docker_flower_port_range: "{{ django_app_docker_port_range }}"
 django_app_docker_flower_url_prefix: _flower
 django_app_docker_flower_user: flower  # change this
 django_app_docker_flower_password: flower  # change this

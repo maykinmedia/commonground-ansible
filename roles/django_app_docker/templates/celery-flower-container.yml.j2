@@ -21,7 +21,7 @@ log_options:
 {% include 'container-env.yml.j2' %}
 
 published_ports:
-  - "127.0.0.1:{{ django_app_docker_flower_port }}:5555"
+  - "127.0.0.1:{{ django_app_docker_flower_port_range }}:5555"
 
 comparisons:
   env: strict

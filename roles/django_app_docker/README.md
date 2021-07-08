@@ -158,7 +158,7 @@ Example Playbook
     django_app_docker_use_celery: true
     django_app_docker_use_celery_beat: true
     django_app_docker_use_flower: true
-    django_app_docker_flower_port: "{{ django_app_docker_port_range }}"
+    django_app_docker_flower_port_range: "{{ django_app_docker_port_range }}"
 
   roles:
     - role: django_app_docker
