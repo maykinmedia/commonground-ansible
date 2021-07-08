@@ -94,6 +94,30 @@ django_app_k8s_resource_limits:
   memory: "1Gi"
   cpu: "1000m"
 
+django_app_k8s_nginx_resource_requests:
+  memory: 100Mi
+  cpu: 100m
+
+django_app_k8s_nginx_resource_limits:
+  memory: 500Mi
+  cpu: 500m
+
+django_app_k8s_redis_resource_requests:
+  memory: 100Mi
+  cpu: 100m
+
+django_app_k8s_redis_resource_limits:
+  memory: 500Mi
+  cpu: 500m
+
+django_app_k8s_flower_resource_requests:
+  memory: 100Mi
+  cpu: 100m
+
+django_app_k8s_flower_resource_limits:
+  memory: 500Mi
+  cpu: 500m
+
 # Example structure:
 #
 # django_app_k8s_cronjobs:

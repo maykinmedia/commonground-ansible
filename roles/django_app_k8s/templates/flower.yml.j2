@@ -36,11 +36,11 @@ spec:
 
         resources:
           requests:
-            memory: "500Mi"
-            cpu: "100m"
+            memory: {{ django_app_k8s_flower_resource_requests.memory|default('500Mi') }}
+            cpu: {{ django_app_k8s_flower_resource_requests.cpu|default('100m') }}
           limits:
-            memory: "1Gi"
-            cpu: "500m"
+            memory: {{ django_app_k8s_flower_resource_limits.memory|default('1Gi') }}
+            cpu: {{ django_app_k8s_flower_resource_limits.cpu|default('500m') }}
 
         command: ["/celery_flower.sh"]
 
