@@ -38,8 +38,6 @@ django_app_k8s_storage: 1G
 django_app_k8s_storage_class: 'azurefile'  # or `azurefile-premium'
 
 django_app_k8s_pod_security_context:
-  runAsUser: 1000
-  runAsGroup: 1000
   fsGroup: 1000
 
 django_app_k8s_use_celery: no
