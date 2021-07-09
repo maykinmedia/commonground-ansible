@@ -32,6 +32,8 @@ spec:
         app.kubernetes.io/managed-by: Ansible
     spec:
 
+      securityContext: {{ django_app_k8s_pod_security_context }}
+
       #  after this time, the pod will receive a KILL if it didn't exit because of the
       #  TERM signal sent. Set high enough values for long-running tasks
       terminationGracePeriodSeconds: {{ item.grace_time|default(django_app_k8s_celery_workers_default_grace_time) }}

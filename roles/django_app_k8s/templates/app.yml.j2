@@ -29,6 +29,8 @@ spec:
         app.kubernetes.io/managed-by: Ansible
     spec:
 
+      securityContext: {{ django_app_k8s_pod_security_context }}
+
 {% if django_app_k8s_pvc %}
       volumes:
         - name: storage

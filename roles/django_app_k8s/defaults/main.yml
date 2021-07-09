@@ -37,6 +37,9 @@ django_app_k8s_pvc: false
 django_app_k8s_storage: 1G
 django_app_k8s_storage_class: 'azurefile'  # or `azurefile-premium'
 
+django_app_k8s_pod_security_context:
+  fsGroup: 1000
+
 django_app_k8s_use_celery: no
 django_app_k8s_use_celery_beat: no
 django_app_k8s_celery_replicas: 2
