@@ -41,8 +41,8 @@ spec:
             memory: {{ django_app_k8s_nginx_resource_requests.memory|default('100Mi') }}
             cpu: {{ django_app_k8s_nginx_resource_requests.cpu|default('100m') }}
           limits:
-            memory: {{ django_app_k8s_nginx_resource_limits.memory|defualt('250Mi') }}
-            cpu: {{ django_app_k8s_nginx_resource_limits.cpu|defualt('250m') }}
+            memory: {{ django_app_k8s_nginx_resource_limits.memory|default('250Mi') }}
+            cpu: {{ django_app_k8s_nginx_resource_limits.cpu|default('250m') }}
 
         readinessProbe:
           httpGet:
