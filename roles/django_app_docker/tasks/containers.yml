@@ -12,10 +12,14 @@
   set_fact:
     _django_app_docker_replicas: "{{ lookup('template', 'replicas.yml.j2') | from_yaml }}"
 
-- name: "Run the django backend containers"
+- name: "Run the django backend containers with docker port range"
   community.docker.docker_container: "{{ lookup('template', 'django-container.yml.j2') | from_yaml }}"
   loop: "{{ _django_app_docker_replicas }}"
   register: backend_ports
+
+- name: "Run the django backend containers again and set persistent ports"
+  community.docker.docker_container: "{{ lookup('template', 'django-container-port.yml.j2') | from_yaml }}"
+  loop: "{{ backend_ports.results }}"
 
 - name: Determine the celery worker replicas
   set_fact:
@@ -31,7 +35,11 @@
   community.docker.docker_container: "{{ lookup('template', 'celery-beat-container.yml.j2') | from_yaml }}"
   when: django_app_docker_use_celery_beat
 
-- name: "Run the celery flower container"
+- name: "Run the celery flower container with docker port range"
   community.docker.docker_container: "{{ lookup('template', 'celery-flower-container.yml.j2') | from_yaml }}"
   when: django_app_docker_use_flower
   register: flower_ports
+
+- name: "Run the celery flower container again set persistent ports"
+  community.docker.docker_container: "{{ lookup('template', 'celery-flower-container.yml.j2') | from_yaml }}"
+  when: django_app_docker_use_flower
