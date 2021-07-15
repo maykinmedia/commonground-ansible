@@ -1,5 +1,5 @@
 ---
 {% for n in range(django_app_docker_replicas) %}
 - name: {{ django_app_docker_name_prefix }}-{{ n }}
-  port: {{ django_app_docker_port_start + n }}
+  port: {{ django_app_docker_port_range  }}
 {% endfor %}

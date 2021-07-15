@@ -1,10 +1,9 @@
 ---
 
 container_default_behavior: no_defaults
-name: "{{ django_app_docker_name_prefix }}-flower"
+name: "{{ item.invocation.module_args.name }}"
 image: "{{ django_app_docker_image | mandatory }}"
-command: ["/celery_flower.sh"]
-hostname: "{{ django_app_docker_name_prefix }}-flower"
+hostname: "{{ item.invocation.module_args.name }}"
 state: started
 pull: yes  # always pull
 restart: "{{ _django_app_docker_env_file.changed }}"
@@ -21,12 +20,7 @@ log_options:
 {% include 'container-env.yml.j2' %}
 
 published_ports:
-{% if flower_ports is defined %}
-  - "127.0.0.1:{{ flower_ports['container']['NetworkSettings']['Ports']['5555/tcp'][0]['HostPort'] }}:5555"
-{% else %}
-  - "127.0.0.1:{{ django_app_docker_flower_port_range }}:5555"
-{% endif %}
-
+  - "127.0.0.1:{{ item['container']['NetworkSettings']['Ports']['8000/tcp'][0]['HostPort'] }}:8000"
 comparisons:
   env: strict
   volumes: strict
