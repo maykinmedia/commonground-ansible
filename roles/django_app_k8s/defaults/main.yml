@@ -144,3 +144,12 @@ django_app_k8s_pod_security_context:
   runAsUser: 1000
   runAsGroup: 1000
   fsGroup: 1000
+
+# Example structure:
+# django_app_k8s_init_containers
+#   - name: volume-perms
+#     image: busybox
+#     command: ['chown', '-R', '1000:1000', '/app/']
+#     volumeMounts: {{ django_app_k8s_app_volume_mounts }}
+#
+django_app_k8s_init_containers: []
