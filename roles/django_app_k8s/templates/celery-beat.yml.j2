@@ -55,3 +55,5 @@ spec:
 {% endif %}
 
         env: {{ django_app_k8s_app_env }}
+      serviceAccountName: "{{ django_app_k8s_service_account| default('default') }}"
+      securityContext: {{ django_app_k8s_pod_security_context }}

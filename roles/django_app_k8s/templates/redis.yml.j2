@@ -53,3 +53,5 @@ spec:
             port: 6379
           initialDelaySeconds: 15
           periodSeconds: 20
+      serviceAccountName: "{{ django_app_k8s_service_account| default('default') }}"
+      securityContext: {{ django_app_k8s_pod_security_context }}

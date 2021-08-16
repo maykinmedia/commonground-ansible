@@ -34,7 +34,7 @@ spec:
             name: {{ django_app_k8s_name_prefix }}-nginx
       containers:
       - name: nginx
-        image: harbor.dta.aks.utrechtproeftuin.nl/common-ground/library/nginx:latest
+        image: nginxinc/nginx-unprivileged:{{ django_app_k8s_nginx_version }}
 
         resources:
           requests:
@@ -46,7 +46,7 @@ spec:
 
         readinessProbe:
           httpGet:
-            port: 80
+            port: 8080
             path: /
             httpHeaders:
               - name: Host
@@ -54,9 +54,12 @@ spec:
 
         livenessProbe:
           httpGet:
-            port: 80
+            port: 8080
             path: /_health/
 
         volumeMounts:
           - name: config
             mountPath: /etc/nginx/conf.d/
+            
+      serviceAccountName: "{{ django_app_k8s_service_account| default('default') }}"
+      securityContext: {{ django_app_k8s_pod_security_context }}

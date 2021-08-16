@@ -29,7 +29,7 @@ spec:
         app.kubernetes.io/managed-by: Ansible
     spec:
 
-      securityContext: {{ django_app_k8s_pod_security_context }}
+#      securityContext: {{ django_app_k8s_pod_security_context }}
 
 {% if django_app_k8s_pvc %}
       volumes:
@@ -37,16 +37,6 @@ spec:
           persistentVolumeClaim:
             claimName: {{ django_app_k8s_name_prefix }}-storage
 {% endif %}
-
-
-{% if django_app_k8s_pvc %}
-      initContainers:
-      - name: volume-perms
-        image: busybox
-        command: ['chown', '-R', '1000:1000', '/app/']
-        volumeMounts: {{ django_app_k8s_app_volume_mounts }}
-{% endif %}
-
 
       containers:
       - name: app
@@ -85,3 +75,6 @@ spec:
 {% endif %}
 
         env: {{ django_app_k8s_app_env }}
+
+      serviceAccountName: "{{ django_app_k8s_service_account| default('default') }}"
+      securityContext: {{ django_app_k8s_pod_security_context }}        

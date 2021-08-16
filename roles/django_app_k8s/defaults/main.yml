@@ -21,6 +21,7 @@ django_app_k8s_sentry_dsn: null
 
 django_app_k8s_package_name: "{{ django_app_k8s_namespace }}"
 django_app_k8s_version: latest
+django_app_k8s_nginx_version: stable
 
 # container image to use
 django_app_k8s_sha256: null
@@ -35,10 +36,7 @@ django_app_k8s_instance: test
 
 django_app_k8s_pvc: false
 django_app_k8s_storage: 1G
-django_app_k8s_storage_class: 'azurefile'  # or `azurefile-premium'
-
-django_app_k8s_pod_security_context:
-  fsGroup: 1000
+django_app_k8s_storage_class: ''  # or `azurefile-premium'
 
 django_app_k8s_use_celery: no
 django_app_k8s_use_celery_beat: no
@@ -83,10 +81,9 @@ django_app_k8s_extra_volume_mounts: []
 django_app_k8s_ingress: false
 django_app_k8s_ingress_template: 'ingress.yml.j2'
 django_app_k8s_ingress_annotations:
-  kubernetes.io/ingress.class: traefik-public
-  traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+#  kubernetes.io/ingress.class: traefik-public
+#  traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
 django_app_k8s_extra_ingress_paths: []
-django_app_k8s_tls: no
 django_app_k8s_add_nginx: no
 
 django_app_k8s_resource_requests:
@@ -132,3 +129,18 @@ django_app_k8s_cronjobs: []
 
 django_app_k8s_job_annotations:
   sidecar.istio.io/inject: "false"
+
+# Use TLS
+django_app_k8s_use_tls: false
+# Provide tls secrets when opennotificaties_use_tls is set to true
+django_app_k8s_tls_secrets:
+  crt: ''
+  key: ''
+
+# Pod security
+django_app_k8s_service_account: ''
+django_app_k8s_create_service_account: false
+django_app_k8s_pod_security_context:
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
