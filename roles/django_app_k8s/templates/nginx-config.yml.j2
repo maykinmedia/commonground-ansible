@@ -5,7 +5,7 @@ kind: ConfigMap
 data:
   default.conf: >
     server {
-        listen       80;
+        listen       8080;
         server_name  {{ django_app_k8s_domain }};
         server_tokens off;
 

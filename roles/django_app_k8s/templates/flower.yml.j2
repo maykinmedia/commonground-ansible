@@ -108,3 +108,6 @@ spec:
               secretKeyRef:
                 name: {{ django_app_k8s_name_prefix }}-secrets
                 key: FLOWER_BASIC_AUTH
+      serviceAccountName: "{{ django_app_k8s_service_account| default('default') }}"
+      securityContext: {{ django_app_k8s_pod_security_context }}
+       

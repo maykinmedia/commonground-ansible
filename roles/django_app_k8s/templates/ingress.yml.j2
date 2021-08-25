@@ -12,11 +12,11 @@ metadata:
     app.kubernetes.io/managed-by: Ansible
   annotations: {{ django_app_k8s_ingress_annotations }}
 spec:
-{% if django_app_k8s_tls %}
+{% if django_app_k8s_use_tls %}
   tls:
     - hosts:
       - "{{ django_app_k8s_domain }}"
-      secretName: "{{ django_app_k8s_name_prefix }}-tls"
+      secretName: "{{ django_app_k8s_name_prefix }}-tls-secrets"
 {% endif %}
   rules:
   - host: "{{ django_app_k8s_domain }}"
@@ -29,7 +29,7 @@ spec:
 {% if django_app_k8s_add_nginx %}
             name: {{ django_app_k8s_name_prefix }}-nginx
             port:
-              number: 80
+              number: 8080
 {% else %}
             name: {{ django_app_k8s_name_prefix }}
             port:
@@ -37,7 +37,7 @@ spec:
 {% endif %}
 
 {% if django_app_k8s_use_celery %}
-      - path: /_flower
+      - path: /_flower/
         pathType: ImplementationSpecific
         backend:
           service:

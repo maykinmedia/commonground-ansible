@@ -33,6 +33,9 @@ spec:
       containers:
       - name: redis
         image: {{ django_app_k8s_image_registry }}library/redis:5.0
+        command:
+          - redis-server
+          - "/redis-config/redis.conf"
 
         resources:
           requests:
@@ -53,3 +56,17 @@ spec:
             port: 6379
           initialDelaySeconds: 15
           periodSeconds: 20
+
+        volumeMounts:
+        - mountPath: /redis-config
+          name: config
+      volumes:
+        - name: config
+          configMap:
+            name: {{ django_app_k8s_redis_config_name }}
+            items:
+            - key: redis-config
+              path: redis.conf
+
+      serviceAccountName: "{{ django_app_k8s_service_account| default('default') }}"
+      securityContext: {{ django_app_k8s_pod_security_context }}
