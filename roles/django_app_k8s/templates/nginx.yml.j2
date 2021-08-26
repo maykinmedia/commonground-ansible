@@ -60,6 +60,15 @@ spec:
         volumeMounts:
           - name: config
             mountPath: /etc/nginx/conf.d/
-            
+{% if django_app_k8s_pvc %}
+          - name: storage
+            mountPath: /app/media
+            subPath: {{ django_app_k8s_package_name }}/{{ django_app_k8s_instance }}/media
+{% for subpath in django_app_k8s_extra_volume_mounts %}
+          - name: storage
+            mountPath: /app/{{ subpath }}
+            subPath: {{ django_app_k8s_package_name }}/{{ django_app_k8s_instance }}/{{ subpath }}
+{% endfor %}
+{% endif %}            
       serviceAccountName: "{{ django_app_k8s_service_account| default('default') }}"
       securityContext: {{ django_app_k8s_pod_security_context }}
