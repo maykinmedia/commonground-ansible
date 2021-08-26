@@ -52,25 +52,8 @@ spec:
             memory: {{ django_app_k8s_resource_limits.memory|default('1Gi') }}
             cpu: {{ django_app_k8s_resource_limits.cpu|default('1000m') }}
 
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8000
-            httpHeaders:
-              - name: Host
-                value: localhost
-          initialDelaySeconds: 30
-          periodSeconds: 30
-
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8000
-            httpHeaders:
-              - name: Host
-                value: localhost
-          initialDelaySeconds: 30
-          periodSeconds: 30
+        readinessProbe: {{ django_app_k8s_healthcheck_probes.readiness }}
+        livenessProbe: {{ django_app_k8s_healthcheck_probes.liveness }}
 
 {% if django_app_k8s_pvc %}
         volumeMounts: {{ django_app_k8s_app_volume_mounts }}
