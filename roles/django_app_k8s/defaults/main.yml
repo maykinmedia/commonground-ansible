@@ -17,6 +17,21 @@ django_app_k8s_extra_dbs: {}
 django_app_k8s_cache_db: 0
 django_app_k8s_extra_caches: []
 
+django_app_k8s_healthcheck_endpoint: /
+django_app_k8s_healthcheck_probe:
+  httpGet:
+    path: "{{ django_app_k8s_healthcheck_endpoint }}"
+    port: 8000
+    httpHeaders:
+      - name: Host
+        value: localhost
+  initialDelaySeconds: 30
+  periodSeconds: 30
+
+django_app_k8s_healthcheck_probes:
+  readiness: "{{ django_app_k8s_healthcheck_probe }}"
+  liveness: "{{ django_app_k8s_healthcheck_probe }}"
+
 django_app_k8s_sentry_dsn: null
 
 django_app_k8s_package_name: "{{ django_app_k8s_namespace }}"
