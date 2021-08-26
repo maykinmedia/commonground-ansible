@@ -57,3 +57,7 @@ data:
             return 200 'OK';
         }
     }
+{% for tpl in django_app_k8s_include_templates %}
+{% include tpl %}
+{% endfor %}
+}
