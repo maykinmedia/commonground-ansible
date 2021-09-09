@@ -29,6 +29,11 @@ spec:
         app.kubernetes.io/managed-by: Ansible
     spec:
       volumes:
+{% if django_app_k8s_pvc %}
+        - name: storage
+          persistentVolumeClaim:
+            claimName: {{ django_app_k8s_name_prefix }}-storage
+{% endif %}
         - name: config
           configMap:
             name: {{ django_app_k8s_name_prefix }}-nginx
