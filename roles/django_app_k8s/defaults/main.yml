@@ -158,9 +158,9 @@ django_app_k8s_tls_secrets:
 django_app_k8s_service_account: ''
 django_app_k8s_create_service_account: false
 django_app_k8s_pod_security_context:
-  runAsUser: 1000
-  runAsGroup: 1000
   fsGroup: 1000
+  # runAsUser: 1000
+  # runAsGroup: 1000
 
 # Example structure:
 # django_app_k8s_init_containers
