@@ -172,3 +172,15 @@ django_app_k8s_pod_security_context:
 django_app_k8s_init_containers: []
 
 django_app_k8s_redis_config_name: redis-config
+
+django_app_k8s_extra_app_labels: []
+
+django_app_k8s_extra_celery_beat_labels: []
+
+django_app_k8s_extra_celery_labels: []
+
+django_app_k8s_extra_flower_labels: []
+
+django_app_k8s_extra_nginx_labels: []
+
+django_app_k8s_extra_redis_labels: []

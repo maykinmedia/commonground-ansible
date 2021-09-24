@@ -29,6 +29,10 @@ spec:
         app.kubernetes.io/component: redis
         app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
         app.kubernetes.io/managed-by: Ansible
+{% for label in django_app_k8s_extra_redis_labels %}
+        {{ label }}: {{ django_app_k8s_extra_redis_labels[label] }}
+{% endfor %}  
+
     spec:
       containers:
       - name: redis
