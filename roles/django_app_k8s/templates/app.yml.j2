@@ -27,6 +27,10 @@ spec:
         app.kubernetes.io/component: backend
         app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
         app.kubernetes.io/managed-by: Ansible
+{% for label in django_app_k8s_extra_app_labels %}
+        {{ label }}: {{ django_app_k8s_extra_app_labels[label] }}
+{% endfor %}        
+
     spec:
 
 {% if django_app_k8s_pvc %}
