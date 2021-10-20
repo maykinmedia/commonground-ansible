@@ -11,3 +11,4 @@
     validate:
       fail_on_error: yes
       strict: yes
+  no_log: True
