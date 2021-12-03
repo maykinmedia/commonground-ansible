@@ -163,7 +163,7 @@ django_app_k8s_pod_security_context:
   # runAsGroup: 1000
 
 # Set security context for cronjobs  
-django_app_k8s_jobs_security_context: []
+django_app_k8s_jobs_security_context: {}
   # fsGroup: 1000
   # runAsUser: 1000
   # runAsGroup: 1000
