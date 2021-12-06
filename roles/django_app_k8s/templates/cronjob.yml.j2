@@ -51,6 +51,8 @@ spec:
               limits:
                 memory: "1Gi"
                 cpu: "1000m"
+            securityContext: {{ django_app_k8s_jobs_security_context }} 
+                
 
 {% if django_app_k8s_pvc %}
             volumeMounts: {{ django_app_k8s_app_volume_mounts }}

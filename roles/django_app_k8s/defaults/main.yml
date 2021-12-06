@@ -162,6 +162,12 @@ django_app_k8s_pod_security_context:
   # runAsUser: 1000
   # runAsGroup: 1000
 
+# Set security context for cronjobs  
+django_app_k8s_jobs_security_context: {}
+  # fsGroup: 1000
+  # runAsUser: 1000
+  # runAsGroup: 1000
+
 # Example structure:
 # django_app_k8s_init_containers
 #   - name: volume-perms
