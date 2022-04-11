@@ -121,6 +121,15 @@ django_app_docker_celery_db: 1  # uses the same redis instance as cache service
 django_app_docker_broker_url: "redis://{{ django_app_docker_name_prefix }}-redis:6379/{{ django_app_docker_celery_db }}"
 django_app_docker_result_backend: "{{ django_app_docker_broker_url }}"
 
+# RabbitMQ
+django_app_docker_use_rabbitmq: false
+# django_app_docker_broker_url: "amqp://{{ django_app_docker_rabbitmq_user }}:{{ django_app_docker_rabbitmq_pass }}@{{ django_app_docker_name_prefix }}-rabbitmq:5672//"
+# django_app_docker_result_backend: "redis://{{ django_app_docker_name_prefix }}-redis:6379/{{ django_app_docker_celery_db }}"
+django_app_docker_publish_broker_url: "amqp://{{ django_app_docker_rabbitmq_user }}:{{ django_app_docker_rabbitmq_pass }}@{{ django_app_docker_name_prefix }}-rabbitmq:5672/%2F"
+django_app_docker_rabbitmq_image: rabbitmq:3.7
+django_app_docker_rabbitmq_user: rabbit
+django_app_docker_rabbitmq_pass: rabbit
+
 # container stop sends TERM for graceful termination, after this grace period, a KILL
 # is issued. You should set this per worker with the maximum duration of a task (should
 # be slightly higher than the task timeout)

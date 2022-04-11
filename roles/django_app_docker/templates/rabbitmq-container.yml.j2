@@ -1,0 +1,20 @@
+---
+
+container_default_behavior: no_defaults
+name: "{{ django_app_docker_name_prefix }}-rabbitmq"
+image: "{{ django_app_docker_rabbitmq_image }}"
+hostname: "{{ django_app_docker_name_prefix }}-rabbitmq"
+pull: no  # only pull when missing
+restart: "{{ _django_app_docker_env_file.changed }}"
+restart_policy: always
+{% include 'networks.yml.j2' %}
+
+privileged: no
+log_driver: json-file
+log_options:
+  max-size: 10m
+  max-file: '10'
+
+env:
+  RABBITMQ_DEFAULT_USER: "{{ django_app_docker_rabbitmq_user }}"
+  RABBITMQ_DEFAULT_PASS: "{{ django_app_docker_rabbitmq_pass }}"    

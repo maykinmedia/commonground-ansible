@@ -8,6 +8,10 @@
 - name: "Run the cache/broker service ({{ django_app_docker_cache_image }})"
   community.docker.docker_container: "{{ lookup('template', 'redis-container.yml.j2') | from_yaml }}"
 
+- name: "Run the rabbitmq message broker container"
+  community.docker.docker_container: "{{ lookup('template', 'rabbitmq-container.yml.j2') | from_yaml }}"
+  when: django_app_docker_use_rabbitmq
+
 - name: Determine the replicas
   set_fact:
     _django_app_docker_replicas: "{{ lookup('template', 'replicas.yml.j2') | from_yaml }}"
