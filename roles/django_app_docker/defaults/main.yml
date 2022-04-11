@@ -83,9 +83,10 @@ django_app_docker_image_always_pull: false
 # Number of desired running web backend containers. Note that all containers are
 # started and stopped together, there are no zero downtime deploys with this setup.
 django_app_docker_replicas: 1
-# Backend ports to expose to NGINX, the host ports will be selected by the Docker daemon in this range
-django_app_docker_port_range: 14000-15000
-
+# Backend ports to expose to NGINX, free ports in this range will be assigned to the host port
+django_app_docker_port_range:
+  start: 14000
+  end: 15000
 
 # Which volumes to create and where to mount them with which mode (rw, ro).
 # Typically created under /var/lib/docker/volumes, ensure you have sufficient disk
@@ -137,7 +138,6 @@ django_app_docker_celery_workers:
     grace_time: "{{ django_app_docker_celery_workers_default_grace_time }}"
 
 # Flower: a celery monitoring tool. Use safe credentials and don't share them!
-django_app_docker_flower_port_range: "{{ django_app_docker_port_range }}"
 django_app_docker_flower_url_prefix: _flower
 django_app_docker_flower_user: flower  # change this
 django_app_docker_flower_password: flower  # change this

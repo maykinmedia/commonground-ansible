@@ -21,10 +21,10 @@ log_options:
 {% include 'container-env.yml.j2' %}
 
 published_ports:
-{% if flower_ports is defined %}
-  - "127.0.0.1:{{ flower_ports['container']['NetworkSettings']['Ports']['5555/tcp'][0]['HostPort'] }}:5555"
+{% if _django_app_docker_container_info_flower.exists %}
+  - "127.0.0.1:{{ _django_app_docker_container_info_flower['container']['NetworkSettings']['Ports']['5555/tcp'][0]['HostPort'] }}:5555"
 {% else %}
-  - "127.0.0.1:{{ django_app_docker_flower_port_range }}:5555"
+  - "127.0.0.1:{{ _django_app_docker_freeports | first }}:5555"
 {% endif %}
 
 comparisons:
