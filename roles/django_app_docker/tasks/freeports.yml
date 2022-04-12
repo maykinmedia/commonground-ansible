@@ -3,6 +3,7 @@
   copy:
     content: |
         #!/usr/bin/python3
+        import socket
         for p in range({{ django_app_docker_port_range.start }},{{ django_app_docker_port_range.end }}):
             import socket
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
