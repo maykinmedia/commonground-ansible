@@ -8,18 +8,20 @@
 - name: "Run the cache/broker service ({{ django_app_docker_cache_image }})"
   community.docker.docker_container: "{{ lookup('template', 'redis-container.yml.j2') | from_yaml }}"
 
+- name: Check if django containers already exists and register port
+  community.docker.docker_container_info:
+    name: "{{ django_app_docker_name_prefix }}-{{ item }}"
+  loop: "{{ range(django_app_docker_replicas)|list }}"
+  register: _django_app_docker_container_info
+
 - name: Determine the replicas
   set_fact:
     _django_app_docker_replicas: "{{ lookup('template', 'replicas.yml.j2') | from_yaml }}"
 
-- name: "Run the django backend containers with docker port range"
+- name: "Run the django backend containers"
   community.docker.docker_container: "{{ lookup('template', 'django-container.yml.j2') | from_yaml }}"
   loop: "{{ _django_app_docker_replicas }}"
   register: backend_ports
-
-- name: "Run the django backend containers again and set persistent ports"
-  community.docker.docker_container: "{{ lookup('template', 'django-container-port.yml.j2') | from_yaml }}"
-  loop: "{{ backend_ports.results }}"
 
 - name: Determine the celery worker replicas
   set_fact:
@@ -35,11 +37,16 @@
   community.docker.docker_container: "{{ lookup('template', 'celery-beat-container.yml.j2') | from_yaml }}"
   when: django_app_docker_use_celery_beat
 
-- name: "Run the celery flower container with docker port range"
+- name: Check if flower containers already exists and register port if exists
+  community.docker.docker_container_info:
+    name: "{{ django_app_docker_name_prefix }}-flower"
+  register: _django_app_docker_container_info_flower
+
+- name: When no flower container found, recheck free ports
+  import_tasks: freeports.yml
+  when: not _django_app_docker_container_info_flower.exists
+
+- name: "Run the celery flower container"
   community.docker.docker_container: "{{ lookup('template', 'celery-flower-container.yml.j2') | from_yaml }}"
   when: django_app_docker_use_flower
   register: flower_ports
-
-- name: "Run the celery flower container again set persistent ports"
-  community.docker.docker_container: "{{ lookup('template', 'celery-flower-container.yml.j2') | from_yaml }}"
-  when: django_app_docker_use_flower
