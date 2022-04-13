@@ -5,7 +5,7 @@ name: "{{ django_app_docker_name_prefix }}-rabbitmq"
 image: "{{ django_app_docker_rabbitmq_image }}"
 hostname: "{{ django_app_docker_name_prefix }}-rabbitmq"
 pull: no  # only pull when missing
-restart: "{{ _django_app_docker_env_file.changed }}"
+restart: no
 restart_policy: always
 {% include 'networks.yml.j2' %}
 
