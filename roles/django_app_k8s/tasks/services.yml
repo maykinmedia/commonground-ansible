@@ -31,7 +31,7 @@
     validate:
       fail_on_error: yes
       strict: yes
-  when: django_app_k8s_use_celery
+  when: django_app_k8s_use_celery and django_app_k8s_flower_ingress
 
 - name: Set up the nginx service
   k8s:
