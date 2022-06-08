@@ -36,7 +36,7 @@ spec:
               number: 8000
 {% endif %}
 
-{% if django_app_k8s_use_celery %}
+{% if django_app_k8s_use_celery and django_app_k8s_flower_ingress %}
       - path: /_flower/
         pathType: ImplementationSpecific
         backend:
