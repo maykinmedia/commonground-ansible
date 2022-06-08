@@ -73,6 +73,7 @@ django_app_k8s_celery_workers:
 django_app_k8s_flower_user: flower
 django_app_k8s_flower_password: flower
 django_app_k8s_flower_basic_auth: "{{ django_app_k8s_flower_user }}:{{ django_app_k8s_flower_password }}"
+django_app_k8s_flower_ingress: false
 
 django_app_k8s_mail: false
 django_app_k8s_mail_host: localhost  # requires the plays/mail.yml
