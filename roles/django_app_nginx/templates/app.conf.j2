@@ -2,7 +2,7 @@
 
 upstream {{ django_app_nginx_prefix }} {
 {% for replica in backend_ports.results %}
-    server 127.0.0.1:{{ replica.container['NetworkSettings']['Ports']['8000/tcp'][0]['HostPort'] }};
+    server 127.0.0.1:{{ replica.container['HostConfig']['PortBindings']['8000/tcp'][0]['HostPort'] }};
 {% endfor %}
 }
 
