@@ -12,11 +12,12 @@ metadata:
     app.kubernetes.io/managed-by: Ansible
   annotations: {{ django_app_k8s_ingress_annotations }}
 spec:
+  ingressClassName: "{{ django_app_k8s_ingress_classname }}"
 {% if django_app_k8s_use_tls %}
   tls:
     - hosts:
       - "{{ django_app_k8s_domain }}"
-      secretName: "{{ django_app_k8s_name_prefix }}-tls-secrets"
+      secretName: "{{ django_app_k8s_tls_secret_name }}"
 {% endif %}
   rules:
   - host: "{{ django_app_k8s_domain }}"

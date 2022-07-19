@@ -52,18 +52,13 @@ spec:
             memory: {{ django_app_k8s_nginx_resource_limits.memory|default('250Mi') }}
             cpu: {{ django_app_k8s_nginx_resource_limits.cpu|default('250m') }}
 
-        readinessProbe:
-          httpGet:
-            port: 8080
-            path: /
-            httpHeaders:
-              - name: Host
-                value: localhost
+{% if django_app_k8s_healthcheck_probes_nginx.readiness %}
+        readinessProbe: {{ django_app_k8s_healthcheck_probes_nginx.readiness }}
+{% endif %}
 
-        livenessProbe:
-          httpGet:
-            port: 8080
-            path: /_health/
+{% if django_app_k8s_healthcheck_probes_nginx.liveness %}
+        livenessProbe: {{ django_app_k8s_healthcheck_probes_nginx.liveness }}
+{% endif %}
 
         volumeMounts:
           - name: config

@@ -17,20 +17,55 @@ django_app_k8s_extra_dbs: {}
 django_app_k8s_cache_db: 0
 django_app_k8s_extra_caches: []
 
-django_app_k8s_healthcheck_endpoint: /
-django_app_k8s_healthcheck_probe:
+django_app_k8s_readinessprobe_endpoint: /
+django_app_k8s_readinessprobe:
   httpGet:
-    path: "{{ django_app_k8s_healthcheck_endpoint }}"
+    path: "{{ django_app_k8s_readinessprobe_endpoint }}"
     port: 8000
     httpHeaders:
       - name: Host
         value: localhost
   initialDelaySeconds: 30
   periodSeconds: 30
+  timeoutSeconds: 1
+
+django_app_k8s_livenessprobe_endpoint: /
+django_app_k8s_livenessprobe:
+  httpGet:
+    path: "{{ django_app_k8s_livenessprobe_endpoint }}"
+    port: 8000
+    httpHeaders:
+      - name: Host
+        value: localhost
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 1  
 
 django_app_k8s_healthcheck_probes:
-  readiness: "{{ django_app_k8s_healthcheck_probe }}"
-  liveness: "{{ django_app_k8s_healthcheck_probe }}"
+  readiness: "{{ django_app_k8s_readinessprobe }}"
+  liveness: "{{ django_app_k8s_livenessprobe }}"
+
+django_app_k8s_readinessprobe_endpoint_nginx: /
+django_app_k8s_readinessprobe_nginx:
+  httpGet:
+    path: "{{ django_app_k8s_readinessprobe_endpoint_nginx }}"
+    port: 8080
+    httpHeaders:
+      - name: Host
+        value: localhost
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 1
+
+django_app_k8s_livenessprobe_endpoint_nginx: /_health/
+django_app_k8s_livenessprobe_nginx:
+  httpGet:
+    path: "{{ django_app_k8s_livenessprobe_endpoint_nginx }}"
+    port: 8080
+
+django_app_k8s_healthcheck_probes_nginx:
+  readiness: "{{ django_app_k8s_readinessprobe_nginx }}"
+  liveness: "{{ django_app_k8s_livenessprobe_nginx }}"
 
 django_app_k8s_sentry_dsn: null
 
@@ -53,12 +88,21 @@ django_app_k8s_pvc: false
 django_app_k8s_storage: 1G
 django_app_k8s_storage_class: ''  # or `azurefile-premium'
 
+django_app_k8s_use_rabbitmq: no
+django_app_k8s_rabbitmq:
+  user: "{{ django_app_k8s_name_prefix }}-{{ django_app_k8s_instance }}"
+  password: "opennotificaties-{{ django_app_k8s_instance }}"
+  rabbitmq_host: "{{ django_app_k8s_name_prefix }}-rabbitmq"
+  rabbitmq_port: 5672
+
 django_app_k8s_use_celery: no
 django_app_k8s_use_celery_beat: no
 django_app_k8s_celery_replicas: 2
 django_app_k8s_celery_db: 1
 django_app_k8s_celery_broker_url: "redis://{{ django_app_k8s_name_prefix }}-redis:6379/{{ django_app_k8s_celery_db }}"
 django_app_k8s_celery_result_backend: "{{ django_app_k8s_celery_broker_url }}"
+
+
 
 # container stop sends TERM for graceful termination, after this grace period, a KILL
 # is issued. You should set this per worker with the maximum duration of a task (should
@@ -69,6 +113,7 @@ django_app_k8s_celery_workers:
   - queue: celery  # celery is the default queue name
     replicas: "{{ django_app_k8s_celery_replicas }}"  # backwards compatible variables
     grace_time: "{{ django_app_k8s_celery_workers_default_grace_time }}"
+
 
 django_app_k8s_flower_user: flower
 django_app_k8s_flower_password: flower
@@ -100,6 +145,7 @@ django_app_k8s_ingress_annotations:
 #  kubernetes.io/ingress.class: traefik-public
 #  traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
 django_app_k8s_extra_ingress_paths: []
+django_app_k8s_ingress_classname: nginx
 django_app_k8s_add_nginx: no
 # Custom template snippet to include in nginx config
 django_app_k8s_include_templates: []
@@ -136,6 +182,14 @@ django_app_k8s_flower_resource_limits:
   memory: 500Mi
   cpu: 500m
 
+django_app_k8s_rabbitmq_resource_requests:
+  memory: 300Mi
+  cpu: 100m
+
+django_app_k8s_rabbitmq_resource_limits:
+  memory: 500Mi
+  cpu: 250m
+
 # Example structure:
 #
 # django_app_k8s_cronjobs:
@@ -150,6 +204,8 @@ django_app_k8s_job_annotations:
 
 # Use TLS
 django_app_k8s_use_tls: false
+django_app_k8s_deploy_tls_secret: false
+django_app_k8s_tls_secret_name: "{{django_app_k8s_name_prefix}}-tls"
 # Provide tls secrets when opennotificaties_use_tls is set to true
 django_app_k8s_tls_secrets:
   crt: ''
@@ -191,3 +247,5 @@ django_app_k8s_extra_flower_labels: []
 django_app_k8s_extra_nginx_labels: []
 
 django_app_k8s_extra_redis_labels: []
+
+django_app_k8s_extra_rabbitmq_labels: []

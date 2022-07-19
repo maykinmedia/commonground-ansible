@@ -11,7 +11,9 @@
   when: django_app_k8s_create_service_account
 
 - import_tasks: tls.yml
-  when: django_app_k8s_use_tls
+  when: 
+    - django_app_k8s_use_tls
+    - django_app_k8s_deploy_tls_secret
 
 - import_tasks: services.yml
 - import_tasks: storage.yml

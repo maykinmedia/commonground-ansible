@@ -85,6 +85,13 @@
       key: CELERY_RESULT_BACKEND
 {% endif %}
 
+{% if django_app_k8s_use_rabbitmq %}
+- name: RABBITMQ_HOST
+  value: "{{ django_app_k8s_rabbitmq.rabbitmq_host | default('app-rabbitmq') }}"
+- name: RABBITMQ_PORT
+  value: "{{ django_app_k8s_rabbitmq.rabbitmq_port | default('5672') }}"
+{% endif %}
+
 {% if django_app_k8s_sentry_dsn %}
 - name: SENTRY_DSN
   valueFrom:

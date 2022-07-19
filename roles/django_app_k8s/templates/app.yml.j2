@@ -56,8 +56,13 @@ spec:
             memory: {{ django_app_k8s_resource_limits.memory|default('1Gi') }}
             cpu: {{ django_app_k8s_resource_limits.cpu|default('1000m') }}
 
+{% if django_app_k8s_healthcheck_probes.readiness  %}
         readinessProbe: {{ django_app_k8s_healthcheck_probes.readiness }}
+{% endif %}
+
+{% if django_app_k8s_healthcheck_probes.liveness %}        
         livenessProbe: {{ django_app_k8s_healthcheck_probes.liveness }}
+{% endif %}
 
 {% if django_app_k8s_pvc %}
         volumeMounts: {{ django_app_k8s_app_volume_mounts }}
