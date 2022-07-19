@@ -10,6 +10,16 @@
       fail_on_error: yes
       strict: yes
 
+- name: Set up RabbitMQ broker service
+  k8s:
+    state: present
+    name: opennotificaties-rabbitmq
+    namespace: "{{ django_app_k8s_namespace }}"
+    definition: "{{ lookup('template', 'rabbitmq-svc.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  when: django_app_k8s_use_rabbitmq     
 
 - name: Set up the app service
   k8s:
