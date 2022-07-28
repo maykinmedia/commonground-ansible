@@ -89,6 +89,7 @@ django_app_k8s_storage: 1G
 django_app_k8s_storage_class: ''  # or `azurefile-premium'
 
 django_app_k8s_use_rabbitmq: no
+django_app_k8s_rabbitmq_version: "3.10"
 django_app_k8s_rabbitmq:
   user: "{{ django_app_k8s_name_prefix }}-{{ django_app_k8s_instance }}"
   password: "opennotificaties-{{ django_app_k8s_instance }}"

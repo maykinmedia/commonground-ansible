@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: rabbitmq
     app.kubernetes.io/instance: "{{ django_app_k8s_instance }}"
-    app.kubernetes.io/version: "3.7"
+    app.kubernetes.io/version: "{{ django_app_k8s_rabbitmq_version }}"
     app.kubernetes.io/component: async-workers
     app.kubernetes.io/part-of: "{{ django_app_k8s_group }}"
     app.kubernetes.io/managed-by: Ansible
@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:3.7
+        image: rabbitmq:{{ django_app_k8s_rabbitmq_version }}
         imagePullPolicy: Always
 
         resources:
