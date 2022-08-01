@@ -10,6 +10,16 @@
       fail_on_error: yes
       strict: yes
 
+- name: Set up the RabbitMQ deployment
+  k8s:
+    state: present
+    name: "{{ django_app_k8s_name_prefix }}-rabbitmq"
+    namespace: "{{ django_app_k8s_namespace }}"
+    definition: "{{ lookup('template', 'rabbitmq.yml.j2') | from_yaml }}"
+    validate:
+      fail_on_error: yes
+      strict: yes
+  when: django_app_k8s_use_rabbitmq
 
 - name: Calculate the app container env
   set_fact:
