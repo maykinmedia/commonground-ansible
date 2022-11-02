@@ -148,8 +148,10 @@ django_app_k8s_ingress_annotations:
 django_app_k8s_extra_ingress_paths: []
 django_app_k8s_ingress_classname: nginx
 django_app_k8s_add_nginx: no
-# Custom template snippet to include in nginx config
+# Custom template snippet to include in default nginx config
 django_app_k8s_include_templates: []
+# Define your own custom nginx-config template e.g. /mytemplates/mynginx.yml.j2
+django_app_k8s_nginx_template: nginx-config.yml.j2
 
 django_app_k8s_resource_requests:
   memory: "500Mi"
