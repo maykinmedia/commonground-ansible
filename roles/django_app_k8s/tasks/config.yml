@@ -5,7 +5,7 @@
     state: present
     name: "{{ django_app_k8s_name_prefix }}-nginx"
     namespace: "{{ django_app_k8s_namespace }}"
-    definition: "{{ lookup('template', 'nginx-config.yml.j2') | from_yaml }}"
+    definition: "{{ lookup('template', django_app_k8s_nginx_template | default('nginx-config.yml.j2')) | from_yaml }}"
     validate:
       fail_on_error: yes
       strict: yes
