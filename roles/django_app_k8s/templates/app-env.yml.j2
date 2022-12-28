@@ -47,13 +47,13 @@
 
 # Caches
 - name: CACHE_DEFAULT
-  value: "{{ django_app_k8s_name_prefix }}-redis:6379/{{ django_app_k8s_cache_db }}"
+  value: "{{ django_app_k8s_name_prefix }}-redis-master:6379/{{ django_app_k8s_cache_db }}"
 - name: CACHE_AXES
-  value: "{{ django_app_k8s_name_prefix }}-redis:6379/{{ django_app_k8s_cache_db }}"
+  value: "{{ django_app_k8s_name_prefix }}-redis-master:6379/{{ django_app_k8s_cache_db }}"
 
 {% for cache in django_app_k8s_extra_caches %}
 - name: CACHE_{{ cache.name }}
-  value: "{{ django_app_k8s_name_prefix }}-redis:6379/{{ cache.db | default(django_app_k8s_cache_db) }}"
+  value: "{{ django_app_k8s_name_prefix }}-redis-master:6379/{{ cache.db | default(django_app_k8s_cache_db) }}"
 {% endfor %}
 
 {% if django_app_k8s_mail %}

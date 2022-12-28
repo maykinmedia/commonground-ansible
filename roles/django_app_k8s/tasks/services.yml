@@ -1,15 +1,4 @@
 ---
-
-- name: Set up the redis service
-  k8s:
-    state: present
-    name: "{{ django_app_k8s_name_prefix }}-redis"
-    namespace: "{{ django_app_k8s_namespace }}"
-    definition: "{{ lookup('template', 'redis-svc.yml.j2') | from_yaml }}"
-    validate:
-      fail_on_error: yes
-      strict: yes
-
 - name: Set up RabbitMQ broker service
   k8s:
     state: present
@@ -30,7 +19,6 @@
     validate:
       fail_on_error: yes
       strict: yes
-
 
 - name: Set up the flower service
   k8s:
