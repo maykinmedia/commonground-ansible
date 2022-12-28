@@ -169,14 +169,6 @@ django_app_k8s_nginx_resource_limits:
   memory: 500Mi
   cpu: 500m
 
-django_app_k8s_redis_resource_requests:
-  memory: 100Mi
-  cpu: 100m
-
-django_app_k8s_redis_resource_limits:
-  memory: 500Mi
-  cpu: 500m
-
 django_app_k8s_flower_resource_requests:
   memory: 100Mi
   cpu: 100m
@@ -247,9 +239,12 @@ django_app_k8s_extra_flower_labels: []
 
 django_app_k8s_extra_nginx_labels: []
 
-django_app_k8s_extra_redis_labels: []
-
 django_app_k8s_extra_rabbitmq_labels: []
+
+##################
+# Redis chart #
+##################
+# Please consult https://github.com/bitnami/charts/tree/main/bitnami/redis for all posible values
 
 django_app_k8s_redis_helm_values:
   architecture: standalone
@@ -257,8 +252,8 @@ django_app_k8s_redis_helm_values:
     enabled: false
   master:
     persistence:
-      enabled: true
-      size: 1Gi
+      enabled: false
+      size: 8Gi
     resources:
       requests:
         cpu: 10m

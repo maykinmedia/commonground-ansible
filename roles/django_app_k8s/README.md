@@ -19,6 +19,8 @@ Requirements
 * Access to the K8s cluster and the relevant namespace
 * `kubectl` commandline tool should be installed on your local machine (Ansible control
   node) to validate/debug deployments
+* `helm` commandline tool should be installed on your local machine (Ansible control
+  node) to deploy some components
 * PostgreSQL (or other relevant database engine) must be installed and configured
 
 This role plays well with:
