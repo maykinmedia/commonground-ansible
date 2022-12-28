@@ -1,14 +1,16 @@
 ---
 
-- name: Set up the redis deployment
-  k8s:
-    state: present
+- name: Add bitnami helm repo redis
+  kubernetes.core.helm_repository:
+    name: bitnami
+    repo_url: "https://charts.bitnami.com/bitnami"
+
+- name: Install Redis Helm Chart
+  kubernetes.core.helm:
     name: "{{ django_app_k8s_name_prefix }}-redis"
-    namespace: "{{ django_app_k8s_namespace }}"
-    definition: "{{ lookup('template', 'redis.yml.j2') | from_yaml }}"
-    validate:
-      fail_on_error: yes
-      strict: yes
+    chart_ref: bitnami/redis
+    release_namespace: "{{ django_app_k8s_namespace }}"
+    values: "{{ django_app_k8s_redis_helm_values }}"
 
 - name: Set up the RabbitMQ deployment
   k8s:

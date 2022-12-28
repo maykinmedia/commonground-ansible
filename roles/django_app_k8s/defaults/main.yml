@@ -100,7 +100,7 @@ django_app_k8s_use_celery: no
 django_app_k8s_use_celery_beat: no
 django_app_k8s_celery_replicas: 2
 django_app_k8s_celery_db: 1
-django_app_k8s_celery_broker_url: "redis://{{ django_app_k8s_name_prefix }}-redis:6379/{{ django_app_k8s_celery_db }}"
+django_app_k8s_celery_broker_url: "redis://{{ django_app_k8s_name_prefix }}-redis-master:6379/{{ django_app_k8s_celery_db }}"
 django_app_k8s_celery_result_backend: "{{ django_app_k8s_celery_broker_url }}"
 
 
@@ -237,8 +237,6 @@ django_app_k8s_jobs_security_context: {}
 #
 django_app_k8s_init_containers: []
 
-django_app_k8s_redis_config_name: redis-config
-
 django_app_k8s_extra_app_labels: []
 
 django_app_k8s_extra_celery_beat_labels: []
@@ -252,3 +250,16 @@ django_app_k8s_extra_nginx_labels: []
 django_app_k8s_extra_redis_labels: []
 
 django_app_k8s_extra_rabbitmq_labels: []
+
+django_app_k8s_redis_helm_values:
+  architecture: standalone
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: true
+      size: 1Gi
+    resources:
+      requests:
+        cpu: 10m
+        memory: 20Mi
