@@ -143,6 +143,14 @@ django_app_docker_celery_workers:
     replicas: "{{ django_app_docker_celery_workers_default_replicas }}"
     grace_time: "{{ django_app_docker_celery_workers_default_grace_time }}"
 
+django_app_docker_celery_workers_enable_healthcheck: false
+django_app_docker_celery_workers_healthcheck:
+  test: ["CMD", "python", "/app/bin/check_celery_worker_liveness.py"]
+  interval: 30s
+  timeout: 5s
+  retries: 3
+  start_period: 10s
+
 # Flower: a celery monitoring tool. Use safe credentials and don't share them!
 django_app_docker_flower_url_prefix: _flower
 django_app_docker_flower_user: flower  # change this
