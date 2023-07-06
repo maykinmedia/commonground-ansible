@@ -80,9 +80,10 @@ django_app_docker_image_always_pull: false
 #                                     #
 #######################################
 
-# Number of desired running web backend containers. Note that all containers are
-# started and stopped together, there are no zero downtime deploys with this setup.
+# Number of desired running web backend containers.
 django_app_docker_replicas: 1
+# Number of seconds to wait between deploying replicas, this can be used to prevent downtime. 
+django_app_docker_replicas_loop_pause: 5
 # Backend ports to expose to NGINX, free ports in this range will be assigned to the host port
 django_app_docker_port_range:
   start: 14000
