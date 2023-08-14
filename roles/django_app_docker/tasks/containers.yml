@@ -25,6 +25,8 @@
 - name: "Run the django backend containers"
   community.docker.docker_container: "{{ lookup('template', 'django-container.yml.j2') | from_yaml }}"
   loop: "{{ _django_app_docker_replicas }}"
+  loop_control:
+    pause: "{{ django_app_docker_replicas_loop_pause }}"
   register: backend_ports
 
 - name: Determine the celery worker replicas
