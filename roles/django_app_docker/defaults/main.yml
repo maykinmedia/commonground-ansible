@@ -201,6 +201,8 @@ django_app_docker_celery_labels: {}
 
 django_app_docker_celery_beat_labels: {}
 
+django_app_docker_flower_labels: {}
+
 django_app_docker_rabbitmq_labels: {}
 
 django_app_docker_redis_labels: {}
