@@ -16,6 +16,8 @@ log_options:
   max-size: 10m
   max-file: '10'
 
+labels: {{ django_app_docker_labels }}
+
 {% include 'volumes.yml.j2' %}
 {% include 'container-env.yml.j2' %}
 

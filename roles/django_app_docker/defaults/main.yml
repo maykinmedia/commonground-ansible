@@ -188,3 +188,21 @@ django_app_docker_mail_default_from: "{{ django_app_docker_name_prefix }}@{{ dja
 #     SOME_ENVVAR: some-value
 #
 django_app_docker_extra_env: {}
+
+# Add docker labels to container: https://docs.docker.com/engine/reference/commandline/run/#label
+# Format:
+#
+#   django_app_docker_labels:
+#     labelkey: labelvalue
+#
+django_app_docker_labels: {}
+
+django_app_docker_celery_labels: {}
+
+django_app_docker_celery_beat_labels: {}
+
+django_app_docker_flower_labels: {}
+
+django_app_docker_rabbitmq_labels: {}
+
+django_app_docker_redis_labels: {}

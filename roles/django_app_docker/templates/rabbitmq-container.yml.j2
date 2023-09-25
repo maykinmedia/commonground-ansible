@@ -15,6 +15,8 @@ log_options:
   max-size: 10m
   max-file: '10'
 
+labels: {{ django_app_docker_rabbitmq_labels }}
+
 env:
   RABBITMQ_DEFAULT_USER: "{{ django_app_docker_rabbitmq_user }}"
   RABBITMQ_DEFAULT_PASS: "{{ django_app_docker_rabbitmq_pass }}"    
