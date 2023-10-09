@@ -189,6 +189,9 @@ django_app_docker_mail_default_from: "{{ django_app_docker_name_prefix }}@{{ dja
 #
 django_app_docker_extra_env: {}
 
+# Add JWT_LEEWAY envvar to .env: https://open-zaak.readthedocs.io/en/latest/installation/reference/time.html?highlight=JWT_LEEWAY#jwt-validation
+django_app_docker_jwt_leeway: ""
+
 # Add docker labels to container: https://docs.docker.com/engine/reference/commandline/run/#label
 # Format:
 #
