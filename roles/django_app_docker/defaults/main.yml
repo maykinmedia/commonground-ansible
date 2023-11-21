@@ -121,6 +121,9 @@ django_app_docker_use_celery: false
 django_app_docker_use_celery_beat: false
 django_app_docker_use_flower: false
 
+# Command to run when starting the celery container, useful if containers are build with e.g. '/celery_start.sh'
+django_app_docker_celery_command: /celery_worker.sh
+
 # Which redis DB to use as broker/result backend
 django_app_docker_celery_db: 1  # uses the same redis instance as cache service
 django_app_docker_broker_url: "redis://{{ django_app_docker_name_prefix }}-redis:6379/{{ django_app_docker_celery_db }}"

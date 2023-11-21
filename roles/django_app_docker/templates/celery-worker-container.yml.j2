@@ -3,7 +3,7 @@
 container_default_behavior: no_defaults
 name: "{{ item.name }}"
 image: "{{ django_app_docker_image | mandatory }}"
-command: ["/celery_worker.sh"]
+command: ["{{ django_app_docker_celery_command }}"]
 hostname: "{{ item.name }}"
 state: started
 pull: yes  # always pull
