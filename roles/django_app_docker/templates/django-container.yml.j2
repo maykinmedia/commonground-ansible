@@ -21,6 +21,11 @@ labels: {{ django_app_docker_labels }}
 {% include 'volumes.yml.j2' %}
 {% include 'container-env.yml.j2' %}
 
+memory: {{ django_app_docker_memory_limit }}
+memory_swap: {{ django_app_docker_memory_swap_limit }}
+
+cpus: {{ django_app_docker_cpus }}
+
 published_ports:
   - "127.0.0.1:{{ item.port }}:8000"
 comparisons:

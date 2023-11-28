@@ -22,6 +22,11 @@ labels: {{ django_app_docker_celery_beat_labels }}
 {% include 'volumes.yml.j2' %}
 {% include 'container-env.yml.j2' %}
 
+memory: {{ django_app_docker_celery_beat_memory_limit }}
+memory_swap: {{ django_app_docker_celery_beat_memory_swap_limit }}
+
+cpus: {{ django_app_docker_celery_beat_cpus }}
+
 comparisons:
   env: strict
   volumes: strict
