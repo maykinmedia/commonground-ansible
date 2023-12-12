@@ -72,6 +72,10 @@ django_app_docker_image_registry: docker.io  # use Docker Hub by default
 django_app_docker_image_name: "maykinmedia/{{ django_app_docker_name_prefix}}"
 # `django_app_docker_image` is derived automatically from the above variables
 
+# Define the state of the containers, used for all containers, see https://docs.ansible.com/ansible/latest/collections/community/docker/docker_container_module.html#parameter-state
+# Does not impact the docker volumes and networks tasks
+django_app_docker_state: started
+
 django_app_docker_image_always_pull: false
 
 #######################################
