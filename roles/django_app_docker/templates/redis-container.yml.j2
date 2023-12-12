@@ -4,6 +4,7 @@ container_default_behavior: no_defaults
 name: "{{ django_app_docker_name_prefix }}-redis"
 image: "{{ django_app_docker_cache_image }}"
 hostname: "{{ django_app_docker_name_prefix }}-redis"
+state: "{{ django_app_docker_state }}"
 pull: no  # only pull when missing
 restart: no
 restart_policy: always

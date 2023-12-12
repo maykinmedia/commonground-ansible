@@ -5,7 +5,7 @@ name: "{{ django_app_docker_name_prefix }}-flower"
 image: "{{ django_app_docker_image | mandatory }}"
 command: ["/celery_flower.sh"]
 hostname: "{{ django_app_docker_name_prefix }}-flower"
-state: started
+state: "{{ django_app_docker_state }}"
 pull: yes  # always pull
 restart: "{{ _django_app_docker_env_file.changed }}"
 restart_policy: always

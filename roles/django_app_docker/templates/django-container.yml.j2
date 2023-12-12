@@ -4,7 +4,7 @@ container_default_behavior: no_defaults
 name: "{{ item.name }}"
 image: "{{ django_app_docker_image | mandatory }}"
 hostname: "{{ item.name }}"
-state: started
+state: "{{ django_app_docker_state }}"
 pull: yes  # always pull
 restart: "{{ _django_app_docker_env_file.changed }}"
 restart_policy: always
