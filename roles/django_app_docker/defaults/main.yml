@@ -9,6 +9,10 @@
 # prefix to use for container, network, volume... names
 django_app_docker_name_prefix: app
 
+# Application linux user (.dotenv is created in home dir of this user)
+# Override if django_app_docker_name_prefix is too long (>31 characters)
+django_app_docker_app_user: "{{ django_app_docker_name_prefix }}"
+
 # domain where the app is deployed. Used in the ALLOWED_HOSTS setting
 django_app_docker_domain: "app.example.com"
 django_app_docker_https: true
