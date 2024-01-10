@@ -11,16 +11,3 @@
   register: _django_app_docker_volumes
   notify:
     - print volume mountpoints
-
-# Volumes are created as the root user by the Docker daemon. For containers dropping
-# privileges, the owner must be set appropriately
-- name: Set volume permissions
-  file:
-    path: "{{ item.volume.Mountpoint }}"
-    state: directory
-    owner: "{{ item.item.owner | default(django_app_docker_name_prefix) }}"
-    group: "{{ item.item.group | default(django_app_docker_name_prefix) }}"
-    recurse: "{{ item.item.recurse | default(False) }}"
-    mode: "{{ item.item.perms | default('u=rwx,g=rx,o-rwx') }}"
-  when: item.item.hostPath is not defined or not item.item.hostPath  # only create docker volumes if we're not bind mounting
-  loop: "{{ _django_app_docker_volumes.results }}"

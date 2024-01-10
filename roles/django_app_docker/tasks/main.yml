@@ -6,12 +6,13 @@
 
 # Docker infra provisioning
 - import_tasks: dependencies.yml
-# - import_tasks: docker-login.yml
 - import_tasks: volumes.yml
 - import_tasks: network.yml
 
 - import_tasks: freeports.yml
 - import_tasks: containers.yml
+
+- import_tasks: volumes_permissions.yml
 
 # Cleanup
 - import_tasks: unset_facts.yml

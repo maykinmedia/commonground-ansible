@@ -23,5 +23,3 @@
     group: "{{ django_app_docker_app_user }}"
     mode: u=rw,g=r,o=
   register: _django_app_docker_env_file
-
-# TODO: django_app_nginx role which sets up the nginx user access to volumes?
