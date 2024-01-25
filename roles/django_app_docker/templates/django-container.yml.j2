@@ -10,6 +10,10 @@ restart: "{{ _django_app_docker_env_file.changed }}"
 restart_policy: always
 {% include 'networks.yml.j2' %}
 
+{% if django_app_docker_enable_healthcheck %}
+healthcheck: {{ django_app_docker_healthcheck }}
+{% endif %}
+
 privileged: no
 log_driver: json-file
 log_options:
