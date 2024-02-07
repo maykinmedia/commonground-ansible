@@ -101,6 +101,10 @@ django_app_docker_healthcheck:
 #                                     #
 #######################################
 
+# List of packages to install on the host system, empty list will skip the task
+django_app_docker_dependencies:
+  - python3-docker
+
 # Number of desired running web backend containers.
 django_app_docker_replicas: 1
 # Number of seconds to wait between deploying replicas, this can be used to prevent downtime. 
