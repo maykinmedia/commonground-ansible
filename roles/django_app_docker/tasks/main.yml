@@ -6,6 +6,8 @@
 
 # Docker infra provisioning
 - import_tasks: dependencies.yml
+  when: django_app_docker_dependencies | length > 0
+  
 - import_tasks: volumes.yml
 - import_tasks: network.yml
 
