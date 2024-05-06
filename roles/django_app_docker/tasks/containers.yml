@@ -12,6 +12,10 @@
   community.docker.docker_container: "{{ lookup('template', 'rabbitmq-container.yml.j2') | from_yaml }}"
   when: django_app_docker_use_rabbitmq
 
+- name: "Run the elasticsearch container"
+  community.docker.docker_container: "{{ lookup('template', 'elasticsearch-container.yml.j2') | from_yaml }}"
+  when: django_app_docker_use_elasticsearch
+
 - name: Check if django containers already exists and register port
   community.docker.docker_container_info:
     name: "{{ django_app_docker_name_prefix }}-{{ item }}"
