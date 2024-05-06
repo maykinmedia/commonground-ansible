@@ -1,0 +1,23 @@
+---
+
+container_default_behavior: no_defaults
+name: "{{ django_app_docker_name_prefix }}-elasticsearch"
+image: "{{ django_app_docker_elasticsearch_image }}"
+hostname: "{{ django_app_docker_name_prefix }}-elasticsearch"
+state: "{{ django_app_docker_state }}"
+pull: no  # only pull when missing
+restart: no
+restart_policy: always
+{% include 'networks.yml.j2' %}
+
+volumes:
+  - {{ django_app_docker_name_prefix }}-elasticsearch:/usr/share/elasticsearch/data
+
+env: {{ django_app_docker_elasticsearch_env }}
+
+memory: {{ django_app_docker_elasticsearch_memory_limit }}
+memory_swap: {{ django_app_docker_elasticsearch_memory_swap_limit }}
+
+cpus: {{ django_app_docker_elasticsearch_cpus }}
+
+labels: {{ django_app_docker_elasticsearch_labels }}

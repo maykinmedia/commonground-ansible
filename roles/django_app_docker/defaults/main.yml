@@ -51,6 +51,18 @@ django_app_docker_cache_image: docker.io/library/redis:6
 django_app_docker_cache_db: 0  # change this if you're using a shared redis instance
 django_app_docker_extra_caches: []
 
+# Elasticsearch
+django_app_docker_elasticsearch_image: docker.elastic.co/elasticsearch/elasticsearch:8.13.3
+django_app_docker_use_elasticsearch: false
+django_app_docker_elasticsearch_env:
+  discovery.type: "single-node"
+  xpack.security.enabled: "false"
+  ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+
+django_app_docker_elasticsearch_memory_limit: 0
+django_app_docker_elasticsearch_memory_swap_limit: 0
+django_app_docker_elasticsearch_cpus: 0
+
 # Error monitoring - Sentry integration. Disabled by default, set a value to opt-in.
 django_app_docker_sentry_dsn: null
 
@@ -258,3 +270,5 @@ django_app_docker_flower_labels: {}
 django_app_docker_rabbitmq_labels: {}
 
 django_app_docker_redis_labels: {}
+
+django_app_docker_elasticsearch_labels: {}
