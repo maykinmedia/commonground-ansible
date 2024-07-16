@@ -16,5 +16,8 @@
 
 - import_tasks: volumes_permissions.yml
 
+- import_tasks: setup_configuration.yml
+  when: django_app_docker_config_enable
+
 # Cleanup
 - import_tasks: unset_facts.yml

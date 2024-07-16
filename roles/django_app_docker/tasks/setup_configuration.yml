@@ -1,0 +1,9 @@
+---
+- name: Run setup_configuration
+  community.docker.docker_container_exec:
+    container: "{{ django_app_docker_name_prefix }}-0"
+    argv:
+      - /app/src/manage.py
+      - "setup_configuration"
+      - "--no-selftest"
+      - "--overwrite"
