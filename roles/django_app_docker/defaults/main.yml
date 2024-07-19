@@ -273,22 +273,5 @@ django_app_docker_redis_labels: {}
 
 django_app_docker_elasticsearch_labels: {}
 
-# Setup configuration
+# Run /app/src/manage.py setup_configuration command. Use django_app_docker_extra_env to add the correct environment variables.
 django_app_docker_config_enable: false
-django_app_docker_config_site_enable: false
-django_app_docker_config_site_domain: openzaak.gemeente.example.com
-django_app_docker_config_site_organization: Gemeente Maykin
-
-# Notification authorization configuration
-django_app_docker_config_notif_openzaak_enable: false
-django_app_docker_config_notif_openzaak_client_id: "opennotficaties"
-django_app_docker_config_notif_openzaak_secret: "notification-secret"
-
-# Notification configuration
-django_app_docker_config_openzaak_notif_enable: false
-django_app_docker_config_notification_api_root: https://notificaties.gemeente.local/api/v1/
-django_app_docker_config_openzaak_notif_clientid: "openzaak"
-django_app_docker_config_openzaak_notif_secret: "openzaak-secret"
-
-django_app_docker_config_authorization_enable: false
-django_app_docker_config_authorization_api_root: https://openzaak.example.nl/autorisaties/api/v1/
