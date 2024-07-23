@@ -22,3 +22,4 @@
   command: python3 /tmp/freeports.py
   register: _django_app_docker_freeports
   no_log: true 
+  changed_when: false
