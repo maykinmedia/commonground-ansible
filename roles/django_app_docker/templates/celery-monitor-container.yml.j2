@@ -1,0 +1,27 @@
+---
+
+container_default_behavior: no_defaults
+name: "{{ django_app_docker_name_prefix }}-celery-monitor"
+image: "{{ django_app_docker_image | mandatory }}"
+command: ["{{ django_app_docker_celery_monitor_command }}"]
+hostname: "{{ django_app_docker_name_prefix }}-celery-monitor"
+state: "{{ django_app_docker_state }}"
+pull: yes  # always pull
+restart: "{{ _django_app_docker_env_file.changed }}"
+restart_policy: always
+{% include 'networks.yml.j2' %}
+
+privileged: no
+log_driver: json-file
+log_options:
+  max-size: 10m
+  max-file: '10'
+
+labels: {{ django_app_docker_celery_monitor_labels }}  
+
+{% include 'volumes.yml.j2' %}
+{% include 'container-env.yml.j2' %}
+
+comparisons:
+  env: strict
+  volumes: strict
