@@ -43,6 +43,10 @@
   loop: "{{ _django_app_docker_celery_worker_replicas }}"
   when: django_app_docker_use_celery
 
+- name: "Run the celery monitor container"
+  community.docker.docker_container: "{{ lookup('template', 'celery-monitor-container.yml.j2') | from_yaml }}"
+  when: django_app_docker_use_celery_monitor
+
 - name: "Run the celery beat container"
   community.docker.docker_container: "{{ lookup('template', 'celery-beat-container.yml.j2') | from_yaml }}"
   when: django_app_docker_use_celery_beat

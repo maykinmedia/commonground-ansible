@@ -175,9 +175,11 @@ django_app_docker_container_user: maykin
 django_app_docker_use_celery: false
 django_app_docker_use_celery_beat: false
 django_app_docker_use_flower: false
+django_app_docker_use_celery_monitor: false
 
 # Command to run when starting the celery container, useful if containers are build with e.g. '/celery_start.sh'
 django_app_docker_celery_command: /celery_worker.sh
+django_app_docker_celery_monitor_command: /celery_monitor.sh
 
 # Which redis DB to use as broker/result backend
 django_app_docker_celery_db: 1  # uses the same redis instance as cache service
@@ -266,6 +268,8 @@ django_app_docker_celery_labels: {}
 django_app_docker_celery_beat_labels: {}
 
 django_app_docker_flower_labels: {}
+
+django_app_docker_celery_monitor_labels: {}
 
 django_app_docker_rabbitmq_labels: {}
 
