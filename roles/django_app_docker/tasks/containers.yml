@@ -33,6 +33,10 @@
     pause: "{{ django_app_docker_replicas_loop_pause }}"
   register: backend_ports
 
+- name: Get the port of the first replica before flower overwrites it
+  ansible.builtin.set_fact:
+    _django_app_docker_port: "{{ _django_app_docker_freeports.stdout_lines[0] }}"
+
 - name: Determine the celery worker replicas
   set_fact:
     _django_app_docker_celery_worker_replicas: "{{ lookup('template', 'celery-replicas.yml.j2') | from_yaml }}"
