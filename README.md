@@ -1,18 +1,20 @@
 # Commonground collection for Ansible
 
-Tools to deploy Django apps & related Common Ground components with Ansible.
+Tools to deploy web-apps & related Common Ground components with Ansible.
 
 ## Docker-on-a-VM approach
 
-Some of the roles in this collection contribute to installing a Django app with Docker
+Some of the roles in this collection contribute to installing a web-app with Docker
 on a VM and exposing it to the outside world.
 
 The relevant roles for this are:
 
-* `django_app_docker`: run the backend container(s), including Redis cache, Celery workers,
+* `django_app_docker`: role focusing on Django web-apps conforming to [default-project](https://bitbucket.org/maykinmedia/default-project). It runs the backend container(s), including Redis cache, Celery workers,
   Celery beat...
 
   This will bind the container ports to the host system, ready for a reverse proxy.
+  
+* `app_docker`: role for running a generic app with Docker. 
 
 * `django_app_nginx`: provides the template for the NGINX reverse proxy. The template
   is inspired on maykin-deployment, and variables from `django_app_docker` are re-used
